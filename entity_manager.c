@@ -6,7 +6,7 @@ void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double curTime
     p->ctrl = ctrls;
     p->score = 0;
     p->hitTime = curTime;
-    p->sprites = GetEntityTextures(id);
+    p->sprite.texture = GetEntityTextures(id);
 }
 
 void InitPlayerPosition(Player* p, Vector2 pos, float spd)
@@ -17,9 +17,10 @@ void InitPlayerPosition(Player* p, Vector2 pos, float spd)
     p->hit = 0;
 }
 
-void InitBall(Entity* ball)
+void InitBall(Ball* ball)
 {
-    ball->id = ENTITY_BALL;
+    ball->obj.id = ENTITY_BALL;
+    ball->sprite.texture = GetEntityTextures(ENTITY_BALL);
 }
 
 void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd)
@@ -27,7 +28,7 @@ void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float sp
     b->obj.pos = pos;
     b->obj.speed = spd;
     float startAngle = DEG2RAD * GetRandomValue(minAng, maxAng);
-    b->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, b->speed);
+    b->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, b->obj.speed);
 }
 
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime)
@@ -78,11 +79,12 @@ int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt)
     
     while (bounce <= bounceCnt)
     {
-        Vector2 react = GetBallCollisionAgainstPlayArea(b, playArea);
-        b->obj.vel.y *= react.y;
-        b->obj.vel.x *= react.x;
-        if (react.y == -1 || react.x == -1) bounce++;
+        Vector2 react = GetBallCollisionAgainstPlayArea(Vector2Add(tmpPos, tmpVel), playArea);
 
+        tmpVel.y *= react.y;
+        tmpVel.x *= react.x;
+        if (react.y == -1 || react.x == -1) bounce++;
+        
         tmpPos = Vector2Add(tmpPos, tmpVel);
         frameCnt++;
     }
@@ -93,15 +95,15 @@ int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt)
 bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit)
 {
     bool bounced = false;
-    b->vel = Vector2Normalize(b->obj.vel);
+    b->obj.vel = Vector2Normalize(b->obj.vel);
     if (pHit)
     {
-        b->obj.vel = Vector2Normalize(Vector2Subtract(b->pos, pCenter));
+        b->obj.vel = Vector2Normalize(Vector2Subtract(b->obj.pos, pCenter));
         if (b->obj.pos.y > pCenter.y) b->obj.vel.y *= -1;
     }
     b->obj.vel = Vector2Scale(b->obj.vel, b->obj.speed);
     
-    Vector2 react = GetBallCollisionAgainstPlayArea(b, playArea);
+    Vector2 react = GetBallCollisionAgainstPlayArea(Vector2Add(b->obj.pos, b->obj.vel), playArea);
     b->obj.vel.y *= react.y;
     b->obj.vel.x *= react.x;
     if (react.y == -1 || react.x == -1) bounced = true;
@@ -110,17 +112,32 @@ bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit)
     return bounced;
 }
 
-Vector2 GetBallCollisionAgainstPlayArea(const Ball* ball, Rectangle playArea);
+Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea)
 {
-    Vector2 tmpPos = Vector2Add(ball->obj.pos, ball->obj.vel);
     Vector2 result = {.x = 1, .y = 1};
     
-    if (tmpPos.y < playArea.y + BALL_R || 
-        tmpPos.y > playArea.y + playArea.height - BALL_R)
+    if (futurePos.y < playArea.y + BALL_R || 
+        futurePos.y > playArea.y + playArea.height - BALL_R)
         result.y = -1;
-    if (tmpPos.x < playArea.x + BALL_R ||
-        tmpPos.x > playArea.x + playArea.width - BALL_R)
+    
+    if (futurePos.x < playArea.x + BALL_R ||
+        futurePos.x > playArea.x + playArea.width - BALL_R)
         result.x = -1;
     
     return result;
 }
+
+void SetCollisionAgainstWallType(Ball* ball, Rectangle playArea)
+{
+    ball->wallHitType = COL_NOHIT;
+    Vector2 futurePos = Vector2Add(ball->obj.vel, ball->obj.pos);
+    
+    if (futurePos.y < playArea.y + BALL_R)
+        ball->wallHitType = COL_UHIT;
+    else if (futurePos.y > playArea.y + playArea.height - BALL_R)
+        ball->wallHitType = COL_DHIT;
+    else if (futurePos.x < playArea.x + BALL_R)
+        ball->wallHitType = COL_LHIT;
+    else if (futurePos.x > playArea.x + playArea.width - BALL_R)
+        ball->wallHitType = COL_RHIT;
+} 

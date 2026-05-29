@@ -2,7 +2,6 @@
 
 /*
 TODO: github
-TODO: bumbas squeez
 TODO: fix racket and ball starting positions
 TODO: reklamas prototips
 TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
@@ -49,6 +48,8 @@ Game InitGame(Player* p, Ball* ball, enum Scene scene)
     
     InitBall(ball);
     InitBallPosition(ball, (Vector2){BALL_X, BALL_Y}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
+    
+    SetBallSprite(ball);
     
     return game;
 }
@@ -114,11 +115,10 @@ enum Scene MainGame(Player* p, Ball* ball)
     Game game = InitGame(p, ball, SCENE_GAME);
     Rectangle playArea = GetActivePlayArea();
     unsigned selection = 0;
-    
+
     while (!WindowShouldClose())
     {
         double curTime = GetTime();
-        
         
         if (game.finished)
         {
@@ -150,7 +150,7 @@ enum Scene MainGame(Player* p, Ball* ball)
         {
             if(curTime - game.resetStartTime > RESET_TIME)
             {
-                RenderBallReset(BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
+                RenderBallReset(ball, BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
                 game.resetBall = false;
             }
         }
@@ -163,7 +163,8 @@ enum Scene MainGame(Player* p, Ball* ball)
             unsigned pIndex = (game.curHits+game.curGame)%2;
             
             Player tmpP = p[pIndex]; 
-            bool tmpCol = CheckCollisionCircleRec(ball->pos, BALL_R, (Rectangle){tmpP.obj.pos.x, tmpP.obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H});
+
+            bool tmpCol = CheckCollisionCircleRec(ball->obj.pos, BALL_R, (Rectangle){tmpP.obj.pos.x, tmpP.obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H});
 
             if (tmpCol && tmpP.hit)
             { 
@@ -175,14 +176,16 @@ enum Scene MainGame(Player* p, Ball* ball)
                 {   
                     p[0].obj.speed += SPEED_PLAYER_INCREASE;
                     p[1].obj.speed += SPEED_PLAYER_INCREASE;
-                    ball->speed++;
-                    UpdateBallSprite();
+                    ball->obj.speed++;
+
+                    UpdateBallSprite(ball);
                 }
                 
                 AssetsPlaySound(SFX_RACKET);
                 UpdateBorderAnim(BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
             }
             
+            SetCollisionAgainstWallType(ball, playArea);
             unsigned isBounced = BallKinematics(ball, Vector2Add(tmpP.obj.pos, (Vector2){PLAYER_HITBOX_W / 2, PLAYER_HITBOX_H / 2}), playArea, tmpP.hit&&tmpCol);
             game.bounces += isBounced;
             
@@ -205,7 +208,7 @@ enum Scene MainGame(Player* p, Ball* ball)
                 if (p[pIndex].score == WINNING_SCORE) game.finished = true;
             }
         }
-        
+
         const char* tmpTxt[] = GAME_TXT;        
         if (game.finished) RenderGame(p, ball, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_END);
         else if (game.resetBall) RenderGame(p, ball, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_START);

@@ -15,6 +15,7 @@
 #define BALL_R 20
 
 enum EntityId {ENTITY_PLAYER1 = 0, ENTITY_PLAYER2 = 1, ENTITY_BALL, ENT_CNT};
+enum BallWallColType {COL_NOHIT, COL_LHIT, COL_RHIT, COL_UHIT, COL_DHIT};
 
 typedef struct {
     enum EntityId id;
@@ -22,6 +23,12 @@ typedef struct {
     Vector2 vel;
     float speed;
 } Entity;
+
+typedef struct {
+    int active;
+    double animTime;
+    Texture2D* texture;
+} Sprite;
 
 typedef struct
 {
@@ -39,14 +46,15 @@ typedef struct
     unsigned score;
     double hitTime;
     Entity obj;
-    Texture2D* sprites;
+    Sprite sprite;
     ControlLayout ctrl;
 } Player;
 
 typedef struct
 {
     Entity obj;
-    Texture2D* sprites;
+    Sprite sprite;
+    enum BallWallColType wallHitType;
 } Ball;
 
 void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double curTime);
@@ -58,4 +66,5 @@ void PlayerInputHandler(Player* p, Rectangle playArea, double curTime);
 int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt);
 bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit);
 
-Vector2 GetBallCollisionAgainstPlayArea(const Ball* ball, Rectangle playArea);
+Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea);
+void SetCollisionAgainstWallType(Ball* ball, Rectangle playArea);

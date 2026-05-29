@@ -3,10 +3,6 @@
 
 static int curFrame = 0;
 static int borderFrameLen;
-static int ballSprite;
-
-static bool pActiveAnim[2];
-static double pAnimStartTime[2];
 
 static Rectangle activePlayArea;
 
@@ -15,12 +11,8 @@ void InitRenderer()
     InitTextureAssets();
     InitFontAssets();
     
-    for (int i = 0; i < 2; i++)
-        pActiveAnim[i] = false;
-    
     int yOffset = GetScrollingTextHeight("TEST", TXT_SCROLL_SIZE);
     activePlayArea = (Rectangle) {0, yOffset, WIDTH - 0, HEIGHT - yOffset};
-    ballSprite = 0;
 }
 
 Rectangle GetActivePlayArea() { return activePlayArea; }
@@ -35,7 +27,7 @@ void RenderMenu(int select, const char** opt, int n)
     EndDrawing();
 }
 
-void RenderGame(Player* p, Entity* ball, Game* game, int select, const char** opt, int n, enum RenderGameState state)
+void RenderGame(Player* p, Ball* ball, Game* game, int select, const char** opt, int n, enum RenderGameState state)
 {
     BeginDrawing();
     {
@@ -51,7 +43,7 @@ void RenderGame(Player* p, Entity* ball, Game* game, int select, const char** op
         
         if(state == STATE_GAME)
         {
-            RenderBallTexture(ball, game->curHits);
+            RenderBallTexture(ball);
         }
     
         //DrawRectangle(p[0].obj.pos.x, p[0].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
@@ -59,6 +51,7 @@ void RenderGame(Player* p, Entity* ball, Game* game, int select, const char** op
             
         //DrawRectangle(p[1].obj.pos.x, p[1].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
         RenderPlayerTexture(&p[1], PLAYER_HITBOX);
+
         
         char scrollBuff[TXT_BUFF_EXT];
         snprintf(scrollBuff, TXT_BUFF_EXT, "BEST OF 5 GAMES - PURPLE RACKET SCORE: %d - GREEN RACKET SCORE: %d - CURRENT RALLY: %03d - ", p[0].score, p[1].score, game->curHits);
@@ -155,11 +148,16 @@ void RenderScrollingText(const char* str, float size, int yPos, float vel)
     firstPos -= vel;
 }
 
-void RenderBallReset(int frameLen)
+void SetBallSprite(Ball* ball)
+{
+    ball->sprite.active = 0;
+}
+
+void RenderBallReset(Ball* ball, int frameLen)
 {
     borderFrameLen = frameLen;
     curFrame = 0;
-    ballSprite = 0;
+    ball->sprite.active = 0;
 }
 
 void UpdateBorderAnim(int frameLen)
@@ -168,9 +166,9 @@ void UpdateBorderAnim(int frameLen)
     curFrame = 0;
 }
 
-void UpdateBallSprite() 
+void UpdateBallSprite(Ball* ball) 
 {   
-    ballSprite = fmin(ballSprite + 1, BALL_TEXTURE_CNT - 1); 
+    ball->sprite.active = fmin(ball->sprite.active + 1, BALL_TEXTURE_CNT - 1); 
 }
 
 void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style, 
@@ -216,7 +214,7 @@ void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style,
     DrawTextEx(fontRender, str, renderPos, size, TXT_SPACING, col);
 }
 
-void RenderPlayerTexture (const Player* p, Vector2 hitbox)
+void RenderPlayerTexture (Player* p, Vector2 hitbox)
 {   
     float height = SPRITE_PLAYER_H*SPRITE_PLAYER_RATIO;
     
@@ -228,37 +226,60 @@ void RenderPlayerTexture (const Player* p, Vector2 hitbox)
         vOffset = hitbox.y;
     }
     
-    Rectangle srcRec = {0, 0, SPRITE_PLAYER_W, SPRITE_PLAYER_H};
-    Rectangle destRec = {p->obj.pos.x + hitbox.x/2, p->obj.pos.y + vOffset, hitbox.x, height};
+    Rectangle src = {0, 0, SPRITE_PLAYER_W, SPRITE_PLAYER_H};
+    Rectangle dest = {p->obj.pos.x + hitbox.x/2, p->obj.pos.y + vOffset, hitbox.x, height};
  
     if (p->hit == true)
     {
-        pActiveAnim[p->obj.id] = true;
-        pAnimStartTime[p->obj.id] = GetTime();
-    }
- 
-    if (pActiveAnim[p->obj.id] == false &&
-        IsTextureValid(p->sprites[0]))
-    {
-        DrawTexturePro(p->sprites[0], srcRec, destRec, (Vector2){hitbox.x/2,0}, rot, WHITE);
+        p->sprite.active = SPRITE_PLAYER_HIT;
+        p->sprite.animTime = GetTime();
     }
     
-    else if (pActiveAnim[p->obj.id] && 
-            IsTextureValid(p->sprites[1]))
+    else if (GetTime() - p->sprite.animTime > PLAYER_ANIM_LEN)
     {
-        DrawTexturePro(p->sprites[1], srcRec, destRec, (Vector2){hitbox.x/2,0}, rot, WHITE);
-        if (GetTime() - pAnimStartTime[p->obj.id] > PLAYER_ANIM_LEN)
-            pActiveAnim[p->obj.id] = false;
+        p->sprite.active = SPRITE_PLAYER_NOHIT;
     }
+    
+    if (IsTextureValid(p->sprite.texture[p->sprite.active]) == false)
+    {
+        fprintf(stderr, "[ERROR]: Player texture invalid!\n");
+        return;
+    }
+    
+    DrawTexturePro(p->sprite.texture[p->sprite.active], src, dest, (Vector2){hitbox.x/2,0}, rot, WHITE);
 }
 
-void RenderBallTexture (const Entity* ball, int hits)
+void RenderBallTexture (Ball* ball)
 {
-    Texture2D* ballText = GetEntityTextures(ENTITY_BALL);
-    Vector2 centerPos = (Vector2){ball->pos.x - BALL_R, ball->pos.y - BALL_R};
-    float ratio = (float)(BALL_R*2) / (float)SPRITE_BALL_W;
+    Vector2 pos = (Vector2){ball->obj.pos.x - BALL_R, ball->obj.pos.y - BALL_R};
+
+    if (IsTextureValid(ball->sprite.texture[ball->sprite.active]) == false)
+    {
+        fprintf(stderr, "[ERROR]: Ball texture not valid!\n");
+        return;
+    }
     
-    if (IsTextureValid(ballText[ballSprite])) DrawTextureEx(ballText[ballSprite], centerPos, 0, ratio, WHITE);
+    Rectangle src = {0, 0, SPRITE_BALL_W, SPRITE_BALL_H};
+    Rectangle dest = {pos.x, pos.y, BALL_R * 2, BALL_R * 2};
+    Vector2 origin = {0,0};
+    
+    switch(ball->wallHitType)
+    {
+        case COL_DHIT:
+            dest.height /= 2;
+            break;
+        case COL_UHIT:
+            dest.height /= 2;
+            break;
+        case COL_LHIT:
+            dest.width /= 2;
+            break;
+        case COL_RHIT:
+            dest.width /= 2;
+            break;
+    }
+        
+    DrawTexturePro(ball->sprite.texture[ball->sprite.active], src, dest, origin, 0, WHITE);
 }
 
 void RenderBorder(int opacity) 

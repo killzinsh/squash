@@ -25,6 +25,8 @@
 #define TXT_SCROLL_SIZE 35
 #define TXT_SCROLL_VEL 3
 
+#define SPRITE_PLAYER_NOHIT 0
+#define SPRITE_PLAYER_HIT 1
 #define SPRITE_PLAYER_W 177
 #define SPRITE_PLAYER_H 495
 #define SPRITE_PLAYER_RATIO (PLAYER_HITBOX_W / (float)SPRITE_PLAYER_W)
@@ -51,20 +53,21 @@ void InitRenderer();
 Rectangle GetActivePlayArea();
 
 void RenderMenu(int select, const char** opt, int n);
-void RenderGame(Player* p, Entity* ball, Game* game, int select, const char** opt, int n, enum RenderGameState state);
+void RenderGame(Player* p, Ball* ball, Game* game, int select, const char** opt, int n, enum RenderGameState state);
 void RenderOptionMenu(int select, Vector2 pos, const char** opt, int n, enum MenuRotation rot);
 
 int GetScrollingTextHeight(const char* str, float size);
 void RenderScrollingText(const char* str, float size, int yPos, float vel);
 
-void RenderBallReset(int frameLen);
+void SetBallSprite(Ball* ball);
+void RenderBallReset(Ball* ball, int frameLen);
 void UpdateBorderAnim(int frameLen);
-void UpdateBallSprite();
+void UpdateBallSprite(Ball* ball);
 
 void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style, 
                 enum FontCentering hor, enum FontCentering vert, Color col);
-void RenderPlayerTexture (const Player* p, Vector2 hitbox);
-void RenderBallTexture (const Entity* ball, int hits);
+void RenderPlayerTexture (Player* p, Vector2 hitbox);
+void RenderBallTexture (Ball* ball);
 void RenderBorder(int opacity);
 
 float ExpInterp(float ratio, float exp);
