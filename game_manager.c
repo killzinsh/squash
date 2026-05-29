@@ -4,21 +4,17 @@
 TODO: github
 TODO: bumbas squeez
 TODO: fix racket and ball starting positions
-TODO: add double dotted + max velocity
-TODO: minimal player velocity increase with each bumbas upgrade
 TODO: reklamas prototips
 TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
-
+TODO: gym mode
 
 TODO: active player opacity / ka decidot kurs aktive player
-TODO: crazy 2k font
 TODO: swoosh skana raketei (un tad hitam butu janogaida bisku)
 TODO: reset scrolling text after each amtch
 TODO: bumbas rotation
 TODO: visual studio
 TODO: brockhampton type beeps (berlin) prieks kickoff
 TODO: Menu selection beeps
-TODO: gym mode
 TODO: reklamu izmeri
 TODO: classic push in, fadout count in animation (davinci uztaisit)
 */
@@ -38,7 +34,7 @@ void CreateGame()
     InitRenderer();
 }
 
-Game InitGame(Player* p, Entity* ball, enum Scene scene)
+Game InitGame(Player* p, Ball* ball, enum Scene scene)
 {
     double initTime = GetTime();
     Game game = {.resetBall = true, .finished = false, 
@@ -57,7 +53,7 @@ Game InitGame(Player* p, Entity* ball, enum Scene scene)
     return game;
 }
 
-void SceneManager(Player* p, Entity* ball, enum Scene initScene)
+void SceneManager(Player* p, Ball* ball, enum Scene initScene)
 {
     enum Scene curScene = initScene;
     
@@ -113,7 +109,7 @@ enum Scene MenuBrowser()
     return SCENE_EXIT;
 }
 
-enum Scene MainGame(Player* p, Entity* ball)
+enum Scene MainGame(Player* p, Ball* ball)
 {
     Game game = InitGame(p, ball, SCENE_GAME);
     Rectangle playArea = GetActivePlayArea();
@@ -154,7 +150,7 @@ enum Scene MainGame(Player* p, Entity* ball)
         {
             if(curTime - game.resetStartTime > RESET_TIME)
             {
-                UpdateBorderAnim(BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
+                RenderBallReset(BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
                 game.resetBall = false;
             }
         }
@@ -173,11 +169,18 @@ enum Scene MainGame(Player* p, Entity* ball)
             { 
                 game.curHits++;
                 game.bounces = 0;
-                if (game.curHits % BALL_SPEED_INCREASE_THRESHOLD == 0) ball->speed++;
+                
+                if (game.curHits % SPEED_INCREASE_THRESHOLD == 0 &&
+                    game.curHits <= SPEED_INCREASE_THRESHOLD*SPEED_MAX_INCREASE) 
+                {   
+                    p[0].obj.speed += SPEED_PLAYER_INCREASE;
+                    p[1].obj.speed += SPEED_PLAYER_INCREASE;
+                    ball->speed++;
+                    UpdateBallSprite();
+                }
                 
                 AssetsPlaySound(SFX_RACKET);
                 UpdateBorderAnim(BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
-
             }
             
             unsigned isBounced = BallKinematics(ball, Vector2Add(tmpP.obj.pos, (Vector2){PLAYER_HITBOX_W / 2, PLAYER_HITBOX_H / 2}), playArea, tmpP.hit&&tmpCol);

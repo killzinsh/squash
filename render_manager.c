@@ -3,11 +3,12 @@
 
 static int curFrame = 0;
 static int borderFrameLen;
+static int ballSprite;
 
 static bool pActiveAnim[2];
 static double pAnimStartTime[2];
 
-static Rectangle activePlayArea; 
+static Rectangle activePlayArea;
 
 void InitRenderer()
 {
@@ -19,6 +20,7 @@ void InitRenderer()
     
     int yOffset = GetScrollingTextHeight("TEST", TXT_SCROLL_SIZE);
     activePlayArea = (Rectangle) {0, yOffset, WIDTH - 0, HEIGHT - yOffset};
+    ballSprite = 0;
 }
 
 Rectangle GetActivePlayArea() { return activePlayArea; }
@@ -52,7 +54,7 @@ void RenderGame(Player* p, Entity* ball, Game* game, int select, const char** op
             RenderBallTexture(ball, game->curHits);
         }
     
-        DrawRectangle(p[0].obj.pos.x, p[0].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
+        //DrawRectangle(p[0].obj.pos.x, p[0].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
         RenderPlayerTexture(&p[0], PLAYER_HITBOX);
             
         //DrawRectangle(p[1].obj.pos.x, p[1].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
@@ -146,7 +148,6 @@ void RenderScrollingText(const char* str, float size, int yPos, float vel)
         firstPos = 0;
         
     DrawRectangle(0, yPos, WIDTH, dimn.y, BLACK);
-    //DrawRectangle(p[1].obj.pos.x, p[1].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
     
     RenderText(str, (Vector2){firstPos, yPos}, size, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);
     RenderText(str, (Vector2){firstPos + dimn.x, yPos}, size, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);
@@ -154,10 +155,22 @@ void RenderScrollingText(const char* str, float size, int yPos, float vel)
     firstPos -= vel;
 }
 
+void RenderBallReset(int frameLen)
+{
+    borderFrameLen = frameLen;
+    curFrame = 0;
+    ballSprite = 0;
+}
+
 void UpdateBorderAnim(int frameLen)
 {
     borderFrameLen = frameLen;
     curFrame = 0;
+}
+
+void UpdateBallSprite() 
+{   
+    ballSprite = fmin(ballSprite + 1, BALL_TEXTURE_CNT - 1); 
 }
 
 void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style, 
@@ -245,20 +258,7 @@ void RenderBallTexture (const Entity* ball, int hits)
     Vector2 centerPos = (Vector2){ball->pos.x - BALL_R, ball->pos.y - BALL_R};
     float ratio = (float)(BALL_R*2) / (float)SPRITE_BALL_W;
     
-    if (hits  < SPRITE_BALL_LVL1_THRESH)
-    {
-        if (IsTextureValid(ballText[0])) DrawTextureEx(ballText[0], centerPos, 0, ratio, WHITE);
-    }
-    
-    else if (hits < SPRITE_BALL_LVL2_THRESH)
-    {
-        if (IsTextureValid(ballText[1])) DrawTextureEx(ballText[1], centerPos, 0, ratio, WHITE);
-    }
-    
-    else
-    {
-        if (IsTextureValid(ballText[2])) DrawTextureEx(ballText[2], centerPos, 0, ratio, WHITE);
-    }
+    if (IsTextureValid(ballText[ballSprite])) DrawTextureEx(ballText[ballSprite], centerPos, 0, ratio, WHITE);
 }
 
 void RenderBorder(int opacity) 

@@ -22,12 +22,12 @@ void InitBall(Entity* ball)
     ball->id = ENTITY_BALL;
 }
 
-void InitBallPosition(Entity* b, Vector2 pos, float minAng, float maxAng, float spd)
+void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd)
 {
-    b->pos = pos;
-    b->speed = spd;
+    b->obj.pos = pos;
+    b->obj.speed = spd;
     float startAngle = DEG2RAD * GetRandomValue(minAng, maxAng);
-    b->vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, b->speed);
+    b->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, b->speed);
 }
 
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime)
@@ -68,62 +68,59 @@ void PlayerInputHandler(Player* p, Rectangle playArea, double curTime)
     p->obj.vel = Vector2Scale(p->obj.vel, 1/p->obj.speed);
 }
 
-int BallFrameCnt(Entity* ball, Rectangle playArea, const int bounceCnt)
+int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt)
 {
     int bounce = 0;
     int frameCnt = 0;
     
-    Vector2 tmpVel = ball->vel;
-    Vector2 tmpPos = ball->pos;
+    Vector2 tmpVel = ball->obj.vel;
+    Vector2 tmpPos = ball->obj.pos;
     
     while (bounce <= bounceCnt)
     {
-        if (Vector2Add(tmpPos, tmpVel).y < playArea.y + BALL_R ||
-            Vector2Add(tmpPos, tmpVel).y > playArea.y + playArea.height - BALL_R)
-        {
-            tmpVel.y *= -1;
-            bounce++;
-        }
-    
-    if (Vector2Add(tmpPos, tmpVel).x < playArea.x + BALL_R ||
-        Vector2Add(tmpPos, tmpVel).x > playArea.x + playArea.width - BALL_R)
-    {
-        tmpVel.x *= -1;
-        bounce++;
-    }
-        
+        Vector2 react = GetBallCollisionAgainstPlayArea(b, playArea);
+        b->obj.vel.y *= react.y;
+        b->obj.vel.x *= react.x;
+        if (react.y == -1 || react.x == -1) bounce++;
+
         tmpPos = Vector2Add(tmpPos, tmpVel);
         frameCnt++;
     }
-    
+   
     return frameCnt;
 }
 
-bool BallKinematics(Entity* b, Vector2 pCenter, Rectangle playArea, bool pHit)
+bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit)
 {
     bool bounced = false;
-    b->vel = Vector2Normalize(b->vel);
+    b->vel = Vector2Normalize(b->obj.vel);
     if (pHit)
     {
-        b->vel = Vector2Normalize(Vector2Subtract(b->pos, pCenter));
-        if (b->pos.y > pCenter.y) b->vel.y *= -1;
+        b->obj.vel = Vector2Normalize(Vector2Subtract(b->pos, pCenter));
+        if (b->obj.pos.y > pCenter.y) b->obj.vel.y *= -1;
     }
-    b->vel = Vector2Scale(b->vel, b->speed);
+    b->obj.vel = Vector2Scale(b->obj.vel, b->obj.speed);
     
-    if (Vector2Add(b->pos, b->vel).y < playArea.y + BALL_R ||
-        Vector2Add(b->pos, b->vel).y > playArea.y + playArea.height - BALL_R)
-    {
-        b->vel.y *= -1;
-        bounced = true;
-    }
+    Vector2 react = GetBallCollisionAgainstPlayArea(b, playArea);
+    b->obj.vel.y *= react.y;
+    b->obj.vel.x *= react.x;
+    if (react.y == -1 || react.x == -1) bounced = true;
     
-    if (Vector2Add(b->pos, b->vel).x < playArea.x + BALL_R ||
-        Vector2Add(b->pos, b->vel).x > playArea.x + playArea.width - BALL_R)
-    {
-        b->vel.x *= -1;
-        bounced = true;
-    }
-    
-    b->pos = Vector2Add(b->pos, b->vel);
+    b->obj.pos = Vector2Add(b->obj.pos, b->obj.vel);
     return bounced;
+}
+
+Vector2 GetBallCollisionAgainstPlayArea(const Ball* ball, Rectangle playArea);
+{
+    Vector2 tmpPos = Vector2Add(ball->obj.pos, ball->obj.vel);
+    Vector2 result = {.x = 1, .y = 1};
+    
+    if (tmpPos.y < playArea.y + BALL_R || 
+        tmpPos.y > playArea.y + playArea.height - BALL_R)
+        result.y = -1;
+    if (tmpPos.x < playArea.x + BALL_R ||
+        tmpPos.x > playArea.x + playArea.width - BALL_R)
+        result.x = -1;
+    
+    return result;
 }

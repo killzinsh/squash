@@ -10,8 +10,8 @@
 
 #define PLAYER_TEXTURE_CNT 2
 
-#define BALL_TEXTURES {"assets/sprites/ball_blue.png", "assets/sprites/ball_red.png", "assets/sprites/ball_yellow.png"}
-#define BALL_TEXTURE_CNT 3
+#define BALL_TEXTURES {"assets/sprites/ball_blue.png", "assets/sprites/ball_red.png", "assets/sprites/ball_yellow_1.png", "assets/sprites/ball_yellow_2.png"}
+#define BALL_TEXTURE_CNT 4
 
 #define WALL_SOUNDS {"assets/sounds/wall01.wav", "assets/sounds/wall02.wav", "assets/sounds/wall03.wav"}
 #define WALL_SOUNDS_CNT 3

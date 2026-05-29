@@ -34,8 +34,6 @@
 
 #define SPRITE_BALL_W 500
 #define SPRITE_BALL_H 500
-#define SPRITE_BALL_LVL1_THRESH 5
-#define SPRITE_BALL_LVL2_THRESH 10
 
 #define PLAYER_ANIM_LEN 0.1f
 
@@ -59,7 +57,9 @@ void RenderOptionMenu(int select, Vector2 pos, const char** opt, int n, enum Men
 int GetScrollingTextHeight(const char* str, float size);
 void RenderScrollingText(const char* str, float size, int yPos, float vel);
 
+void RenderBallReset(int frameLen);
 void UpdateBorderAnim(int frameLen);
+void UpdateBallSprite();
 
 void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style, 
                 enum FontCentering hor, enum FontCentering vert, Color col);

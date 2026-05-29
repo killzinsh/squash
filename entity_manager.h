@@ -43,11 +43,19 @@ typedef struct
     ControlLayout ctrl;
 } Player;
 
+typedef struct
+{
+    Entity obj;
+    Texture2D* sprites;
+} Ball;
+
 void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double curTime);
 void InitPlayerPosition(Player* p, Vector2 pos, float spd);
-void InitBall(Entity* ball);
-void InitBallPosition(Entity* b, Vector2 pos, float minAng, float maxAng, float spd);
+void InitBall(Ball* ball);
+void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd);
 
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime);
-int BallFrameCnt(Entity* ball, Rectangle playArea, const int bounceCnt);
-bool BallKinematics(Entity* b, Vector2 pCenter, Rectangle playArea, bool pHit);
+int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt);
+bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit);
+
+Vector2 GetBallCollisionAgainstPlayArea(const Ball* ball, Rectangle playArea);

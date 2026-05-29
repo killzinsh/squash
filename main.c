@@ -6,7 +6,7 @@
 int main(void)
 {
     Player player[2];
-    Entity ball;
+    Ball ball;
     
     CreateGame();
     SceneManager(player, &ball, SCENE_MENU);
