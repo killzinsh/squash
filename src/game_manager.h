@@ -10,9 +10,9 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#include "render_manager.h"
+#include "renderer/render_manager.h"
 #include "asset_manager.h"
-#include "entity_manager.h"
+#include "entities/entity_manager.h"
 
 #define TITLE "SQUASH!"
 

@@ -1,0 +1,1 @@
+#include "advert_entity.h"

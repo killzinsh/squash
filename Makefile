@@ -305,11 +305,17 @@ ifeq ($(PLATFORM),PLATFORM_WEB)
 endif
 
 SRC_DIR = src
+RENDER_DIR = renderer
+ENTITY_DIR = entities
+
 OBJ_DIR = obj
 
 # Define all object files from source files
 SRC = $(wildcard $(SRC_DIR)/*.c)
-OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+SRC += $(wildcard $(SRC_DIR)/$(RENDER_DIR)/*.c)
+SRC += $(wildcard $(SRC_DIR)/$(ENTITY_DIR)/*.c)
+
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
 # For Android platform we call a custom Makefile.Android
 ifeq ($(PLATFORM),PLATFORM_ANDROID)

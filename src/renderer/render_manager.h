@@ -1,7 +1,10 @@
 #pragma once
 
-#include "asset_manager.h"
-#include "entity_manager.h"
+#include "text_renderer.h"
+#include "entity_renderer.h"
+
+#include "../asset_manager.h"
+#include "../entities/entity_manager.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -12,19 +15,6 @@
 
 #define PAD_MENU_Y 5
 #define PAD_MENU_X 5
-
-#define TXT_SPACING 0
-#define TXT_BUFF (31+1)
-#define TXT_BUFF_EXT (1023+1)
-
-#define TXT_MENU_SIZE 60
-#define MAX_MENU_OPTIONS 3
-#define TXT_COUNTDOWN_SIZE 2000
-#define TXT_WIN_SIZE 80
-#define TXT_WIN_PAD 60
-
-#define TXT_SCROLL_SIZE 35
-#define TXT_SCROLL_VEL 3
 
 #define SPRITE_PLAYER_NOHIT 0
 #define SPRITE_PLAYER_HIT 1
@@ -45,9 +35,6 @@
 
 typedef struct Game Game;
 
-enum FontCentering {FONT_LEFT, FONT_CENTER, FONT_RIGHT, FONT_TOP, FONT_MID, FONT_BOT};
-
-enum MenuRotation {OPT_ROT_VERT, OPT_ROT_HOR};
 enum RenderGameState {STATE_START, STATE_GAME, STATE_END};
 
 void InitRenderer();
@@ -55,18 +42,12 @@ Rectangle GetActivePlayArea();
 
 void RenderMenu(int select, const char** opt, int n);
 void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int select, const char** opt, int n, enum RenderGameState state);
-void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, enum MenuRotation rot);
-
-int GetScrollingTextHeight(const char* str, float size);
-void RenderScrollingText(const char* str, float size, int yPos, float vel);
 
 void SetBallSprite(Ball* ball);
 void RenderBallReset(Ball* ball, int frameLen);
 void UpdateBorderAnim(int frameLen);
 void UpdateBallSprite(Ball* ball);
 
-void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style, 
-                enum FontCentering hor, enum FontCentering vert, Color col);
 void RenderPlayerTexture (Player* p, Vector2 hitbox);
 void RenderBallTexture (Ball* ball);
 void RenderBorder(int opacity);

@@ -37,6 +37,36 @@ void InitAdverts(Advert* ads[], int adCnt)
         ads[i] = NULL;
 }
 
+Advert* CreateAdvert(enum AdSize adSize, Rectangle playArea)
+{
+    Advert* ad = (Advert*)malloc(1 * sizeof(Advert));
+    ad->obj.id = ENTITY_AD;
+
+    switch (adSize)
+    {
+    case AD_HOR_BANNER:
+        ad->obj.pos.x = playArea.width / 2;
+        ad->obj.pos.y = (playArea.height + playArea.y);
+        break;
+    case AD_VERT_BANNER:
+        
+        break;
+    case AD_SMALL_BOX:
+        
+        break;
+    case AD_BIG_BOX:
+        
+        break;
+    
+    default:
+        fprintf(stderr, "[ERROR]: Unknown ad size!\n");
+        free(ad);
+        return NULL;
+    }
+
+    return ad;
+}
+
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime)
 {   
     p->obj.vel = (Vector2){0, 0};
