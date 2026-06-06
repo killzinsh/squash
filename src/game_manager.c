@@ -102,6 +102,8 @@ enum Scene MainGame(Player* p, Ball* ball)
 
     unsigned selection = 0;
 
+    SpawnAdvert(AD_HOR_BANNER, playArea, seed);
+
     while (!WindowShouldClose())
     {
         double curTime = GetTime();

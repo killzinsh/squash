@@ -16,18 +16,19 @@
 
 #define BALL_R 20
 
-enum EntityId {ENTITY_PLAYER1 = 0, ENTITY_PLAYER2 = 1, ENTITY_BALL, ENTITY_AD, ENTITY_CNT};
+enum EntityId {ENTITY_PLAYER1 = 0, ENTITY_PLAYER2 = 1, ENTITY_BALL, 
+               ENTITY_AD_HOR_BANNER, ENTITY_AD_VERT_BANNER, 
+               ENTITY_AD_SMALL_RECT, ENTITY_AD_BIG_RECT, ENTITY_CNT};
 enum BallWallColType {COL_NOHIT, COL_LHIT, COL_RHIT, COL_UHIT, COL_DHIT};
-enum AdSize {AD_HOR_BANNER, AD_VERT_BANNER, AD_SMALL_BOX, AD_BIG_BOX, AD_CNT};
 
-typedef struct {
+typedef struct Entity {
     enum EntityId id;
     Vector2 pos;
     Vector2 vel;
     float speed;
 } Entity;
 
-typedef struct {
+typedef struct Sprite {
     int active;
     double animTime;
     Texture2D* texture;
@@ -59,8 +60,7 @@ typedef struct
     enum BallWallColType wallHitType;
 } Ball;
 
-typedef struct
-{
+typedef struct Advert {
     Entity obj;
     Sprite closeBox;
     Sprite adImage;
@@ -70,9 +70,6 @@ void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double curTime
 void InitPlayerPosition(Player* p, Vector2 pos, float spd);
 void InitBall(Ball* ball);
 void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd);
-void InitAdverts(Advert* ads[], int adCnt);
-
-Advert* CreateAdvert(enum AdSize adSize, Rectangle playArea);
 
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime);
 

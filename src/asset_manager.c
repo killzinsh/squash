@@ -4,6 +4,7 @@
 static Texture2D p1Textures[PLAYER_TEXTURE_CNT];
 static Texture2D p2Textures[PLAYER_TEXTURE_CNT];
 static Texture2D ballTextures[BALL_TEXTURE_CNT];
+static Texture2D adTexturesHorBanner[AD_TEXTURE_HOR_BANNER_CNT];
 
 static Texture2D border;
 
@@ -53,6 +54,12 @@ void InitTextureAssets()
         if (IsTextureValid(ballTextures[i]) == false)
             fprintf(stderr, "[ERROR]: Failed to load: %s\n", ballTexturePath[i]);
     }
+
+    const char* adTexturePath[AD_TEXTURE_HOR_BANNER_CNT] = AD_TEXTURES_HOR_BANNER;
+    for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
+    {
+        adTexturesHorBanner[i] = LoadTexture(adTexturePath[i]);
+    } 
     
     const char* borderPath = BORDER_FILE; 
     border = LoadTexture(borderPath);
@@ -109,6 +116,8 @@ Texture2D* GetEntityTextures(enum EntityId id)
             return p2Textures;
         case ENTITY_BALL:
             return ballTextures;
+        case ENTITY_AD_HOR_BANNER:
+            return adTexturesHorBanner;
         default:
             fprintf(stderr, "[ERROR]: Unknown entity id for texture!\n");
             return NULL;
@@ -132,6 +141,9 @@ void CloseAssets()
     for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
         if(IsTextureValid(p2Textures[i])) UnloadTexture(p2Textures[i]);
     
+    for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
+        if (IsTextureValid(adTexturesHorBanner[i])) UnloadTexture(adTexturesHorBanner[i]);
+
     for (int i = 0; i < BALL_TEXTURE_CNT; i++)
         if (IsTextureValid(ballTextures[i])) UnloadTexture(ballTextures[i]);
     

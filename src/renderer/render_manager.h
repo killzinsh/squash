@@ -50,6 +50,7 @@ void UpdateBallSprite(Ball* ball);
 
 void RenderPlayerTexture (Player* p, Vector2 hitbox);
 void RenderBallTexture (Ball* ball);
+void RenderAds(Advert* ads[], int adCnt);
 void RenderBorder(int opacity);
 
 float ExpInterp(float ratio, float exp);

@@ -1,7 +1,9 @@
 /*
 TODO: reklamas prototips
-TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
+TODO: figure out how to check memory leaks
 TODO: gym mode
+
+TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
 TODO: active player white outline
 
 TODO: swoosh skana raketei (un tad hitam butu janogaida bisku)

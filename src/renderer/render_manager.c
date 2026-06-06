@@ -12,7 +12,7 @@ void InitRenderer()
     InitFontAssets();
     
     int yOffset = GetScrollingTextHeight("TEST", TXT_SCROLL_SIZE);
-    activePlayArea = (Rectangle) {0, yOffset, WIDTH - 0, HEIGHT - yOffset};
+    activePlayArea = (Rectangle) {0.0f, (float)yOffset, WIDTH - 0, HEIGHT - yOffset};
 }
 
 Rectangle GetActivePlayArea() { return activePlayArea; }
@@ -44,6 +44,7 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
         if(state == STATE_GAME)
         {
             RenderBallTexture(ball);
+            RenderAds(ads, adCnt);
         }
     
         //DrawRectangle(p[0].obj.pos.x, p[0].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
@@ -169,6 +170,11 @@ void RenderBallTexture (Ball* ball)
     }
         
     DrawTexturePro(ball->sprite.texture[ball->sprite.active], src, dest, origin, 0, WHITE);
+}
+
+void RenderAds(Advert* ads[], int adCnt)
+{
+    
 }
 
 void RenderBorder(int opacity) 
