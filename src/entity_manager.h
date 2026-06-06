@@ -14,8 +14,9 @@
 
 #define BALL_R 20
 
-enum EntityId {ENTITY_PLAYER1 = 0, ENTITY_PLAYER2 = 1, ENTITY_BALL, ENT_CNT};
+enum EntityId {ENTITY_PLAYER1 = 0, ENTITY_PLAYER2 = 1, ENTITY_BALL, ENTITY_AD, ENTITY_CNT};
 enum BallWallColType {COL_NOHIT, COL_LHIT, COL_RHIT, COL_UHIT, COL_DHIT};
+enum AdSize {AD_SMALL, AD_MED, AD_BIG, AD_CNT};
 
 typedef struct {
     enum EntityId id;
@@ -57,14 +58,25 @@ typedef struct
     enum BallWallColType wallHitType;
 } Ball;
 
+typedef struct
+{
+    Entity obj;
+    Sprite sprite;
+} Advert;
+
 void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double curTime);
 void InitPlayerPosition(Player* p, Vector2 pos, float spd);
 void InitBall(Ball* ball);
 void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd);
+void InitAdverts(Advert* ads[], int adCnt);
+
+Advert* CreateAdvert(enum AdSize);
 
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime);
+
 int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt);
 bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit);
-
 Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea);
 void SetCollisionAgainstWallType(Ball* ball, Rectangle playArea);
+
+void FreeAdvert(Advert* pAd);

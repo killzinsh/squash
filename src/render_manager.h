@@ -18,6 +18,7 @@
 #define TXT_BUFF_EXT (1023+1)
 
 #define TXT_MENU_SIZE 60
+#define MAX_MENU_OPTIONS 3
 #define TXT_COUNTDOWN_SIZE 2000
 #define TXT_WIN_SIZE 80
 #define TXT_WIN_PAD 60
@@ -53,8 +54,8 @@ void InitRenderer();
 Rectangle GetActivePlayArea();
 
 void RenderMenu(int select, const char** opt, int n);
-void RenderGame(Player* p, Ball* ball, Game* game, int select, const char** opt, int n, enum RenderGameState state);
-void RenderOptionMenu(int select, Vector2 pos, const char** opt, int n, enum MenuRotation rot);
+void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int select, const char** opt, int n, enum RenderGameState state);
+void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, enum MenuRotation rot);
 
 int GetScrollingTextHeight(const char* str, float size);
 void RenderScrollingText(const char* str, float size, int yPos, float vel);

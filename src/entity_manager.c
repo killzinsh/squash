@@ -31,6 +31,12 @@ void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float sp
     b->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, b->obj.speed);
 }
 
+void InitAdverts(Advert* ads[], int adCnt)
+{
+    for (int i = 0; i < adCnt; i++)
+        ads[i] = NULL;
+}
+
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime)
 {   
     p->obj.vel = (Vector2){0, 0};

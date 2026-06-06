@@ -27,7 +27,7 @@ void RenderMenu(int select, const char** opt, int n)
     EndDrawing();
 }
 
-void RenderGame(Player* p, Ball* ball, Game* game, int select, const char** opt, int n, enum RenderGameState state)
+void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int select, const char** opt, int n, enum RenderGameState state)
 {
     BeginDrawing();
     {
@@ -52,7 +52,6 @@ void RenderGame(Player* p, Ball* ball, Game* game, int select, const char** opt,
         //DrawRectangle(p[1].obj.pos.x, p[1].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
         RenderPlayerTexture(&p[1], PLAYER_HITBOX);
 
-        
         char scrollBuff[TXT_BUFF_EXT];
         snprintf(scrollBuff, TXT_BUFF_EXT, "BEST OF 5 GAMES - PURPLE RACKET SCORE: %d - GREEN RACKET SCORE: %d - CURRENT RALLY: %03d - ", p[0].score, p[1].score, game->curHits);
         RenderScrollingText(scrollBuff, TXT_SCROLL_SIZE, 0, TXT_SCROLL_VEL);
@@ -79,12 +78,12 @@ void RenderGame(Player* p, Ball* ball, Game* game, int select, const char** opt,
     EndDrawing();
 }
 
-void RenderOptionMenu(int select, Vector2 pos, const char** opt, int n, enum MenuRotation rot)
+void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, enum MenuRotation rot)
 {
-    Color txtColor[n];
+    Color txtColor[MAX_MENU_OPTIONS];
     for (int i = 0; i < n; i++) txtColor[i] = BLACK;
     
-    enum FontStyle fStyle[n];
+    enum FontStyle fStyle[MAX_MENU_OPTIONS];
     for (int i = 0; i < n; i++) fStyle[i] = FONT_REG;
     
     txtColor[select] = BLUE;
@@ -267,6 +266,7 @@ void RenderBallTexture (Ball* ball)
     {
         case COL_DHIT:
             dest.height /= 2;
+            origin.y = -dest.height;
             break;
         case COL_UHIT:
             dest.height /= 2;
@@ -276,6 +276,7 @@ void RenderBallTexture (Ball* ball)
             break;
         case COL_RHIT:
             dest.width /= 2;
+            origin.x = -dest.width;
             break;
     }
         

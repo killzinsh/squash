@@ -1,21 +1,25 @@
 #include "game_manager.h"
 
 /*
-TODO: github
-TODO: fix racket and ball starting positions
 TODO: reklamas prototips
 TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
 TODO: gym mode
+TODO: active player white outline
 
-TODO: active player opacity / ka decidot kurs aktive player
 TODO: swoosh skana raketei (un tad hitam butu janogaida bisku)
-TODO: reset scrolling text after each amtch
 TODO: bumbas rotation
 TODO: visual studio
+
+TODO: reset scrolling text after each amtch
 TODO: brockhampton type beeps (berlin) prieks kickoff
+TODO: make game music (priekks kick off + tad main loop)
+TODO: hpye man count in
+TODO: classic push in, fadout count in animation (davinci uztaisit)
+
 TODO: Menu selection beeps
 TODO: reklamu izmeri
-TODO: classic push in, fadout count in animation (davinci uztaisit)
+TODO: add menu music loop
+TODO: end screen music loop
 */
 
 void CreateGame()
@@ -27,13 +31,13 @@ void CreateGame()
         exit(EXIT_FAILURE);
     }
     SetTargetFPS(FPS);
-    SetRandomSeed(time(NULL));
-    
+    SetRandomSeed((unsigned)time(NULL));
+
     InitAudioAssets();
     InitRenderer();
 }
 
-Game InitGame(Player* p, Ball* ball, enum Scene scene)
+Game InitGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Rectangle playArea, enum Scene scene)
 {
     double initTime = GetTime();
     Game game = {.resetBall = true, .finished = false, 
@@ -43,14 +47,16 @@ Game InitGame(Player* p, Ball* ball, enum Scene scene)
     InitPlayer(&p[0], ENTITY_PLAYER1, PLAYER1_CTRLS, initTime);
     if(scene == SCENE_GAME) InitPlayer(&p[1], ENTITY_PLAYER2, PLAYER2_CTRLS, initTime);
     
-    InitPlayerPosition(&p[0], PLAYER1_POS, PLAYER_INIT_SPEED);
-    if(scene == SCENE_GAME) InitPlayerPosition(&p[1], PLAYER2_POS, PLAYER_INIT_SPEED);
+    InitPlayerPosition(&p[0], PLAYER1_POS(playArea.y), PLAYER_INIT_SPEED);
+    if(scene == SCENE_GAME) InitPlayerPosition(&p[1], PLAYER2_POS(playArea.y), PLAYER_INIT_SPEED);
     
     InitBall(ball);
-    InitBallPosition(ball, (Vector2){BALL_X, BALL_Y}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
+    InitBallPosition(ball, (Vector2){BALL_X, BALL_Y(playArea.y)}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
     
     SetBallSprite(ball);
-    
+
+    InitAdverts(ads, adCnt);
+
     return game;
 }
 
@@ -112,8 +118,10 @@ enum Scene MenuBrowser()
 
 enum Scene MainGame(Player* p, Ball* ball)
 {
-    Game game = InitGame(p, ball, SCENE_GAME);
     Rectangle playArea = GetActivePlayArea();
+    Advert* adArr[MAX_ADVERT_CNT];
+    Game game = InitGame(p, ball, adArr, MAX_ADVERT_CNT, playArea, SCENE_GAME);
+
     unsigned selection = 0;
 
     while (!WindowShouldClose())
@@ -195,9 +203,9 @@ enum Scene MainGame(Player* p, Ball* ball)
             {   
                 p[pIndex].score++;
                 
-                InitPlayerPosition(&p[0], PLAYER1_POS, PLAYER_INIT_SPEED);
-                InitPlayerPosition(&p[1], PLAYER2_POS, PLAYER_INIT_SPEED);
-                InitBallPosition(ball, (Vector2){BALL_X, BALL_Y}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
+                InitPlayerPosition(&p[0], PLAYER1_POS(playArea.y), PLAYER_INIT_SPEED);
+                InitPlayerPosition(&p[1], PLAYER2_POS(playArea.y), PLAYER_INIT_SPEED);
+                InitBallPosition(ball, (Vector2){BALL_X, BALL_Y(playArea.y)}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
                 
                 game.curGame++;
                 game.curHits = 0;
@@ -210,9 +218,9 @@ enum Scene MainGame(Player* p, Ball* ball)
         }
 
         const char* tmpTxt[] = GAME_TXT;        
-        if (game.finished) RenderGame(p, ball, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_END);
-        else if (game.resetBall) RenderGame(p, ball, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_START);
-        else RenderGame(p, ball, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_GAME);
+        if (game.finished) RenderGame(p, ball, adArr, MAX_ADVERT_CNT, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_END);
+        else if (game.resetBall) RenderGame(p, ball, adArr, MAX_ADVERT_CNT, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_START);
+        else RenderGame(p, ball, adArr, MAX_ADVERT_CNT, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_GAME);
     }
     
     return SCENE_EXIT;
