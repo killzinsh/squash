@@ -14,7 +14,7 @@
 #define BALL_TEXTURES {"assets/sprites/ball_blue.png", "assets/sprites/ball_red.png", "assets/sprites/ball_yellow_1.png", "assets/sprites/ball_yellow_2.png"}
 #define BALL_TEXTURE_CNT 4
 
-#define AD_TEXTURES_HOR_BANNER {"assets/overlays/ads/hor_banner1", "assets/overlays/ads/hor_banner2"}
+#define AD_TEXTURES_HOR_BANNER {"assets/overlays/ads/hor_banner1.png", "assets/overlays/ads/hor_banner2.png"}
 #define AD_TEXTURE_HOR_BANNER_CNT 2
 
 #define WALL_SOUNDS {"assets/sounds/wall01.wav", "assets/sounds/wall02.wav", "assets/sounds/wall03.wav"}

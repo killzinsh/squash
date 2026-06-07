@@ -33,7 +33,7 @@ typedef struct Advert {
     Sprite adImage;
 } Advert;
 
-void InitAdverts(Advert* ads[], int adCnt);
+void InitAdverts(Advert* ads[], int n);
 
 bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea);
 Advert* CreateAdvert(enum EntityId id, Rectangle adArea);

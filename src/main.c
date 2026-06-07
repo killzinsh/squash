@@ -1,11 +1,14 @@
 /*
 TODO: reklamas prototips
+TODO: implement all other ad types
 TODO: figure out how to check memory leaks
+TODO: close reklamas
+TODO: banners are always centered
+TODO: ad textures are in the blurred sharp stylistic
+TODO: set spawning time
 TODO: gym mode
 
 CODE IMPROVE: assetmanager get function combined texture and cnt
-CODE IMPROVE: move entity definition to single entity so for advert, and ball and player entities
-there can be struct definition inside the respective header files
 CODE IMPROVE: seperate all entities in respective source files
 CODE IMPROVE: seperate all render manager to entities + overlay renderer
 CODE IMPROVE: init all entities in single funciton call

@@ -202,9 +202,9 @@ enum Scene MainGame(Player* p, Ball* ball)
         }
 
         const char* tmpTxt[] = GAME_TXT;        
-        if (game.finished) RenderGame(p, ball, adArr, MAX_ADVERT_CNT, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_END);
-        else if (game.resetBall) RenderGame(p, ball, adArr, MAX_ADVERT_CNT, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_START);
-        else RenderGame(p, ball, adArr, MAX_ADVERT_CNT, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_GAME);
+        if (game.finished) RenderGame(p, ball, adArr, adCnt, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_END);
+        else if (game.resetBall) RenderGame(p, ball, adArr, adCnt, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_START);
+        else RenderGame(p, ball, adArr, adCnt, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_GAME);
     }
     
     FreeAdverts(adArr, adCnt);

@@ -15,25 +15,18 @@ static Font fonts[FONT_STYLE_CNT];
 void InitAudioAssets()
 {
     InitAudioDevice();
-    if (IsAudioDeviceReady() == false)
+    if (IsAudioDeviceReady() == false) return;
+
+    const char* wallSfxFiles[] = WALL_SOUNDS;
+    for (int i = 0; i < WALL_SOUNDS_CNT; i++)
     {
-        fprintf(stderr, "[ERROR]: Failed to init audio device!\n");
+        wallSfx[i] = LoadSound(wallSfxFiles[i]);
     }
-    else
+    
+    const char* racketHitSfxFiles[] = RACKETHIT_SOUNDS;
+    for (int i = 0; i < RACKETHIT_SOUNDS_CNT; i++)
     {
-        fprintf(stdout, "[INFO]: Audio device intialized!\n");
-        
-        const char* wallSfxFiles[] = WALL_SOUNDS;
-        for (int i = 0; i < WALL_SOUNDS_CNT; i++)
-        {
-            wallSfx[i] = LoadSound(wallSfxFiles[i]);
-        }
-        
-        const char* racketHitSfxFiles[] = RACKETHIT_SOUNDS;
-        for (int i = 0; i < RACKETHIT_SOUNDS_CNT; i++)
-        {
-            racketHitSfx[i] = LoadSound(racketHitSfxFiles[i]);
-        }
+        racketHitSfx[i] = LoadSound(racketHitSfxFiles[i]);
     }
 }
 
@@ -50,15 +43,11 @@ void InitTextureAssets()
     for (int i = 0; i < BALL_TEXTURE_CNT; i++)
     {
         ballTextures[i] = LoadTexture(ballTexturePath[i]);
-        if (IsTextureValid(ballTextures[i]) == false)
-            fprintf(stderr, "[ERROR]: Failed to load: %s\n", ballTexturePath[i]);
     }
 
     const char* adTexturePath[AD_TEXTURE_HOR_BANNER_CNT] = AD_TEXTURES_HOR_BANNER;
     for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
-    {
         adTexturesHorBanner[i] = LoadTexture(adTexturePath[i]);
-    } 
     
     const char* borderPath = BORDER_FILE; 
     border = LoadTexture(borderPath);

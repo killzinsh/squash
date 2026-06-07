@@ -2,9 +2,9 @@
 
 #include "entity_manager.h"
 
-void InitAdverts(Advert* ads[], int adCnt)
+void InitAdverts(Advert* ads[], int n)
 {
-    for (int i = 0; i < adCnt; i++)
+    for (int i = 0; i < n; i++)
         ads[i] = NULL;
 }
 
@@ -20,7 +20,8 @@ bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
     int seed = GetRandomValue(0, AD_RANGE_MAX);
     if (seed <= AD_HOR_BANNER_RATE && horBannerCnt <= MAX_HOR_BANNER_CNT)
     {
-        ads[adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+        ads[adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, 
+            AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
     } 
     else if (seed <= AD_VERT_LEFT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
     {
@@ -46,7 +47,13 @@ bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
 
 Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
 {
-    Advert* ad = (Advert*)malloc(1 * sizeof(Advert));
+    Advert* ad = malloc(1 * sizeof(Advert));
+    if (ad == NULL)
+    {
+        fprintf(stderr, "[ERROR]: Failed to allocate memory for ad!\n");
+        return NULL;
+    }
+    
     ad->obj.id = id;
     ad->adImage.texture = GetEntityTextures(id);
     ad->adImage.active = GetRandomValue(0, GetEntityTextureCnt(id)-1);
