@@ -37,8 +37,19 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
             float t = (GetTime() - game->resetStartTime);
             char countdownStr[TXT_BUFF];
             snprintf(countdownStr, TXT_BUFF, "%.2f", t);
-                
+
             RenderText(countdownStr, (Vector2){WIDTH/2, HEIGHT/2}, TXT_COUNTDOWN_SIZE, FONT_REG, FONT_CENTER, FONT_MID, BLUE);
+
+            Rectangle horBanner = AD_HOR_BANNER_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
+            Rectangle vertBannerL = AD_VERT_LEFT_BANNER_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
+            Rectangle vertBannerR = AD_VERT_RIGHT_BANNER_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
+            Rectangle rect = AD_RECT_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
+            
+
+            DrawRectangle(rect.x, rect.y, rect.width, rect.height, PINK);
+            DrawRectangle(horBanner.x, horBanner.y, horBanner.width, horBanner.height, PURPLE);
+            DrawRectangle(vertBannerL.x, vertBannerL.y, vertBannerL.width, vertBannerL.height, ORANGE);
+            DrawRectangle(vertBannerR.x, vertBannerR.y, vertBannerR.width, vertBannerR.height, YELLOW);
         }
         
         if(state == STATE_GAME)

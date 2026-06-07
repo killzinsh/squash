@@ -55,7 +55,7 @@ void InitTextureAssets()
     
     const char* adTextureRectPath[AD_TEXTURE_RECT_CNT] = AD_TEXTURES_RECT;
     for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
-        adTexturesVertBanner[i] = LoadTexture(adTextureRectPath[i]);
+        adTexturesRect[i] = LoadTexture(adTextureRectPath[i]);
     
     const char* borderPath = BORDER_FILE; 
     border = LoadTexture(borderPath);
@@ -159,7 +159,10 @@ void CloseAssets()
     for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
         if(IsTextureValid(p1Textures[i])) UnloadTexture(p1Textures[i]);
     for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
-        if(IsTextureValid(p2Textures[i])) UnloadTexture(p2Textures[i]);
+        if(IsTextureValid(p2Textures[i])) UnloadTexture(p2Textures[i]);    
+
+    for (int i = 0; i < BALL_TEXTURE_CNT; i++)
+        if (IsTextureValid(ballTextures[i])) UnloadTexture(ballTextures[i]);
     
     for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
         if (IsTextureValid(adTexturesHorBanner[i])) UnloadTexture(adTexturesHorBanner[i]);
@@ -170,9 +173,7 @@ void CloseAssets()
     for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
         if (IsTextureValid(adTexturesRect[i])) UnloadTexture(adTexturesRect[i]);
 
-    for (int i = 0; i < BALL_TEXTURE_CNT; i++)
-        if (IsTextureValid(ballTextures[i])) UnloadTexture(ballTextures[i]);
-    
+
     if (IsTextureValid(border)) UnloadTexture(border);
     
     CloseAudioDevice();

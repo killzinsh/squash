@@ -14,19 +14,19 @@
 
 #define AD_VERT_LEFT_BANNER_RATE 65 //15%
 #define AD_VERT_LEFT_BANNER_AREA(xOff,yOff,w,h) \
-        ((Rectangle){w/7 - 100 + xOff, h/2 - 325 + yOff, 200, 650})
+        ((Rectangle){10 + xOff, 10 + yOff, 200, h - yOff - 80})
+
 #define AD_VERT_RIGHT_BANNER_RATE 80 // 15%
 #define AD_VERT_RIGHT_BANNER_AREA(xOff,yOff,w,h) \
-        ((Rectangle){w/7*6 - 100 + xOff, h/2 - 325 + yOff, 200, 650})
+        ((Rectangle){w - 210 - xOff, 10 + yOff, 200, h - yOff - 80})
 #define MAX_VERT_BANNER_CNT 2
 
-#define AD_SMALL_RECT_RATE 95 //15%
-#define AD_SMALL_RECT_BANNER_AREA(xOff,yOff,w,h) \
-        ((Rectangle){w/7*6 - 100 + xOff, h/2 - 325 + yOff, 200, 650})
+#define AD_RECT_RATE 100 //20%
+#define AD_RECT_AREA(xOff,yOff,w,h) \
+        ((Rectangle){25 + xOff, 25 + yOff, w - 50 - xOff, h - 50 - yOff})
 #define MAX_SMALL_RECT_CNT 2
 
 #define AD_RANGE_MAX 100
-
 #define MAX_ADVERT_CNT 5
 
 typedef struct Advert {

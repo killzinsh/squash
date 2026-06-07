@@ -20,6 +20,7 @@ void InitPlayerPosition(Player* p, Vector2 pos, float spd)
 void InitBall(Ball* ball)
 {
     ball->obj.id = ENTITY_BALL;
+    ball->sprite.active = 0;
     ball->sprite.texture = GetEntityTextures(ENTITY_BALL);
 }
 

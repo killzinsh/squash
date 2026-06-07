@@ -1,6 +1,5 @@
 /*
 TODO: reklamas prototips
-TODO: implement all other ad types
 TODO: figure out how to check memory leaks
 TODO: close reklamas
 TODO: banners are always centered maybe not

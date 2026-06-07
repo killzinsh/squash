@@ -15,9 +15,6 @@ bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
     static int smallRectCnt = 0;
     static int bigRectCnt = 0;
 
-    Rectangle lRect = AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height);
-    Rectangle rRect = AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height);
-
     ads[adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, 
         AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
 
@@ -26,6 +23,10 @@ bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
     
     ads[adCnt+2] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
         AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+    
+    ads[adCnt+3] = CreateAdvert(ENTITY_AD_RECT, 
+        AD_RECT_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+    
     
     /*
     int seed = GetRandomValue(0, AD_RANGE_MAX);
@@ -72,11 +73,8 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
     ad->adImage.texture = GetEntityTextures(id);
     ad->adImage.active = GetRandomValue(0, GetEntityTextureCnt(id)-1);
 
-    Vector2 textureDimn = {.x = ad->adImage.texture[ad->adImage.active].width,
-                           .y = ad->adImage.texture[ad->adImage.active].height};
-
-    //????
-    printf("w: %f h: %f\n", textureDimn.x, textureDimn.y);
+    Vector2 textureDimn = {.x = (float)ad->adImage.texture[ad->adImage.active].width,
+                           .y = (float)ad->adImage.texture[ad->adImage.active].height};
 
     if (textureDimn.x > adArea.width || textureDimn.y > adArea.height)
     {

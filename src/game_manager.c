@@ -31,8 +31,6 @@ Game InitGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Rectangle playAre
     
     InitBall(ball);
     InitBallPosition(ball, (Vector2){BALL_X, BALL_Y(playArea.y)}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
-    
-    SetBallSprite(ball);
 
     InitAdverts(ads, adCnt);
 
@@ -104,9 +102,9 @@ enum Scene MainGame(Player* p, Ball* ball)
 
     Game game = InitGame(p, ball, adArr, MAX_ADVERT_CNT, playArea, SCENE_GAME);
 
-    unsigned selection = 0;
+    int selection = 0;
 
-    if (SpawnAdvert(adArr, adCnt, playArea)) adCnt += 3;
+    if (SpawnAdvert(adArr, adCnt, playArea)) adCnt += 4;
 
     while (!WindowShouldClose())
     {
