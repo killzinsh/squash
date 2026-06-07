@@ -14,8 +14,20 @@
 #define BALL_TEXTURES {"assets/sprites/ball_blue.png", "assets/sprites/ball_red.png", "assets/sprites/ball_yellow_1.png", "assets/sprites/ball_yellow_2.png"}
 #define BALL_TEXTURE_CNT 4
 
-#define AD_TEXTURES_HOR_BANNER {"assets/overlays/ads/hor_banner1.png", "assets/overlays/ads/hor_banner2.png"}
-#define AD_TEXTURE_HOR_BANNER_CNT 2
+#define AD_TEXTURES_HOR_BANNER {"assets/overlays/ads/hor_banner1.png", "assets/overlays/ads/hor_banner2.png",\
+                                "assets/overlays/ads/hor_banner3.png", "assets/overlays/ads/hor_banner4.png",\
+                                "assets/overlays/ads/hor_banner5.png", "assets/overlays/ads/hor_banner6.png"}
+#define AD_TEXTURE_HOR_BANNER_CNT 6
+
+#define AD_TEXTURES_VERT_BANNER {"assets/overlays/ads/vert_banner1.png", "assets/overlays/ads/vert_banner2.png",\
+                                 "assets/overlays/ads/vert_banner3.png", "assets/overlays/ads/vert_banner4.png",\
+                                 "assets/overlays/ads/vert_banner5.png"}
+#define AD_TEXTURE_VERT_BANNER_CNT 5
+
+#define AD_TEXTURES_RECT {"assets/overlays/ads/small_rect1.png", "assets/overlays/ads/small_rect2.png",\
+                          "assets/overlays/ads/small_rect3.png", "assets/overlays/ads/small_rect4.png",\
+                          "assets/overlays/ads/small_rect5.png"}
+#define AD_TEXTURE_RECT_CNT 5
 
 #define WALL_SOUNDS {"assets/sounds/wall01.wav", "assets/sounds/wall02.wav", "assets/sounds/wall03.wav"}
 #define WALL_SOUNDS_CNT 3
@@ -27,9 +39,13 @@
 
 #define BORDER_FILE "assets/overlays/border.png"
 
-enum EntityId;
 enum FontStyle {FONT_REG, FONT_BOLD, FONT_BOLD_ITALIC, FONT_STYLE_CNT};
 enum SoundType {SFX_WALL, SFX_RACKET, SFX_CNT};
+
+typedef struct {
+    int cnt;
+    Texture2D* textures;
+} TextureArray;
 
 void InitAudioAssets();
 void InitTextureAssets();

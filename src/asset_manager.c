@@ -4,6 +4,8 @@ static Texture2D p1Textures[PLAYER_TEXTURE_CNT];
 static Texture2D p2Textures[PLAYER_TEXTURE_CNT];
 static Texture2D ballTextures[BALL_TEXTURE_CNT];
 static Texture2D adTexturesHorBanner[AD_TEXTURE_HOR_BANNER_CNT];
+static Texture2D adTexturesVertBanner[AD_TEXTURE_VERT_BANNER_CNT];
+static Texture2D adTexturesRect[AD_TEXTURE_RECT_CNT];
 
 static Texture2D border;
 
@@ -41,13 +43,19 @@ void InitTextureAssets()
     
     const char* ballTexturePath[BALL_TEXTURE_CNT] = BALL_TEXTURES;
     for (int i = 0; i < BALL_TEXTURE_CNT; i++)
-    {
         ballTextures[i] = LoadTexture(ballTexturePath[i]);
-    }
 
-    const char* adTexturePath[AD_TEXTURE_HOR_BANNER_CNT] = AD_TEXTURES_HOR_BANNER;
+    const char* adTextureHorPath[AD_TEXTURE_HOR_BANNER_CNT] = AD_TEXTURES_HOR_BANNER;
     for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
-        adTexturesHorBanner[i] = LoadTexture(adTexturePath[i]);
+        adTexturesHorBanner[i] = LoadTexture(adTextureHorPath[i]);
+    
+    const char* adTextureVertPath[AD_TEXTURE_VERT_BANNER_CNT] = AD_TEXTURES_VERT_BANNER;
+    for (int i = 0; i < AD_TEXTURE_VERT_BANNER_CNT; i++)
+        adTexturesVertBanner[i] = LoadTexture(adTextureVertPath[i]);
+    
+    const char* adTextureRectPath[AD_TEXTURE_RECT_CNT] = AD_TEXTURES_RECT;
+    for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
+        adTexturesVertBanner[i] = LoadTexture(adTextureRectPath[i]);
     
     const char* borderPath = BORDER_FILE; 
     border = LoadTexture(borderPath);
@@ -106,6 +114,10 @@ Texture2D* GetEntityTextures(enum EntityId id)
             return ballTextures;
         case ENTITY_AD_HOR_BANNER:
             return adTexturesHorBanner;
+        case ENTITY_AD_VERT_BANNER:
+            return adTexturesVertBanner;
+        case ENTITY_AD_RECT:
+            return adTexturesRect;
         default:
             fprintf(stderr, "[ERROR]: Unknown entity id for texture!\n");
             return NULL;
@@ -124,6 +136,8 @@ int GetEntityTextureCnt(enum EntityId id)
             return BALL_TEXTURE_CNT;
         case ENTITY_AD_HOR_BANNER:
             return AD_TEXTURE_HOR_BANNER_CNT;
+        case ENTITY_AD_VERT_BANNER:
+            return AD_TEXTURE_VERT_BANNER_CNT;
         default:
             fprintf(stderr, "[ERROR]: Unknown entity id for texture count!\n");
             return 0;
@@ -149,6 +163,12 @@ void CloseAssets()
     
     for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
         if (IsTextureValid(adTexturesHorBanner[i])) UnloadTexture(adTexturesHorBanner[i]);
+    
+    for (int i = 0; i < AD_TEXTURE_VERT_BANNER_CNT; i++)
+        if (IsTextureValid(adTexturesVertBanner[i])) UnloadTexture(adTexturesVertBanner[i]);
+
+    for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
+        if (IsTextureValid(adTexturesRect[i])) UnloadTexture(adTexturesRect[i]);
 
     for (int i = 0; i < BALL_TEXTURE_CNT; i++)
         if (IsTextureValid(ballTextures[i])) UnloadTexture(ballTextures[i]);

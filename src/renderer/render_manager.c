@@ -44,6 +44,8 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
         if(state == STATE_GAME)
         {
             RenderBallTexture(ball);
+            RenderAds(ads, adCnt);
+
         }
     
         //DrawRectangle(p[0].obj.pos.x, p[0].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
@@ -69,7 +71,6 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
         
         if (state == STATE_GAME)
         {
-            RenderAds(ads, adCnt);
             float ratio = (float)curFrame/(float)borderFrameLen; 
             RenderBorder(ExpInterp(fmin(ratio, 1.0f), BORDER_ANIM_EXP) * BORDER_OPACITY_MAX);
         }
@@ -77,11 +78,6 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
         curFrame++;
     }
     EndDrawing();
-}
-
-void SetBallSprite(Ball* ball)
-{
-    ball->sprite.active = 0;
 }
 
 void RenderBallReset(Ball* ball, int frameLen)
@@ -182,8 +178,7 @@ void RenderAds(Advert* ads[], int adCnt)
             continue;
         }
         DrawTexture(ads[i]->adImage.texture[ads[i]->adImage.active], 
-                    ads[i]->obj.pos.x, 
-                    ads[i]->obj.pos.y, WHITE);
+                    ads[i]->obj.pos.x, ads[i]->obj.pos.y, WHITE);
     }
 }
 

@@ -1,7 +1,5 @@
 #include "advert_entity.h"
 
-#include "entity_manager.h"
-
 void InitAdverts(Advert* ads[], int n)
 {
     for (int i = 0; i < n; i++)
@@ -17,6 +15,19 @@ bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
     static int smallRectCnt = 0;
     static int bigRectCnt = 0;
 
+    Rectangle lRect = AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height);
+    Rectangle rRect = AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height);
+
+    ads[adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, 
+        AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+
+    ads[adCnt+1] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
+        AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+    
+    ads[adCnt+2] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
+        AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+    
+    /*
     int seed = GetRandomValue(0, AD_RANGE_MAX);
     if (seed <= AD_HOR_BANNER_RATE && horBannerCnt <= MAX_HOR_BANNER_CNT)
     {
@@ -25,11 +36,13 @@ bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
     } 
     else if (seed <= AD_VERT_LEFT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
     {
-        //ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, );
+        ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
+            AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
     }
     else if (seed <= AD_VERT_RIGHT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
     {
-        //ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, );
+        ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
+            AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
     }
     else if (seed <= AD_SMALL_RECT_RATE && smallRectCnt <= MAX_SMALL_RECT_CNT)
     {
@@ -39,7 +52,8 @@ bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
     {
         //ads[adCnt] = CreateAdvert(ENTITY_AD_BIG_RECT, );
     }
-    
+    */
+
     printf("pointer to ad -> %p\n", ads[adCnt]);
     if (ads[adCnt] == NULL)  return false;
     else return true;
@@ -61,6 +75,9 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
     Vector2 textureDimn = {.x = ad->adImage.texture[ad->adImage.active].width,
                            .y = ad->adImage.texture[ad->adImage.active].height};
 
+    //????
+    printf("w: %f h: %f\n", textureDimn.x, textureDimn.y);
+
     if (textureDimn.x > adArea.width || textureDimn.y > adArea.height)
     {
         free(ad);
@@ -69,7 +86,7 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
 
     ad->obj.pos.x = (float)GetRandomValue(adArea.x, adArea.x + adArea.width - textureDimn.x);
     ad->obj.pos.y = (float)GetRandomValue(adArea.y, adArea.y + adArea.height - textureDimn.y);
-    
+
     return ad;
 }
 

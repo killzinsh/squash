@@ -8,20 +8,22 @@
 #include "../asset_manager.h"
 
 #define AD_HOR_BANNER_RATE 50 //50%
+#define AD_HOR_BANNER_AREA(xOff,yOff,w,h) \
+        ((Rectangle){w/2 - 375 + xOff, h/6*5 + yOff, 750, 100}) //750 100
 #define MAX_HOR_BANNER_CNT 1
 
-#define AD_HOR_BANNER_AREA(xOff,yOff,w,h) \
-        ((Rectangle){w/2 - 400 + xOff, h/4*3 + yOff, 800, 100})
-
 #define AD_VERT_LEFT_BANNER_RATE 65 //15%
+#define AD_VERT_LEFT_BANNER_AREA(xOff,yOff,w,h) \
+        ((Rectangle){w/7 - 100 + xOff, h/2 - 325 + yOff, 200, 650})
 #define AD_VERT_RIGHT_BANNER_RATE 80 // 15%
+#define AD_VERT_RIGHT_BANNER_AREA(xOff,yOff,w,h) \
+        ((Rectangle){w/7*6 - 100 + xOff, h/2 - 325 + yOff, 200, 650})
 #define MAX_VERT_BANNER_CNT 2
 
 #define AD_SMALL_RECT_RATE 95 //15%
+#define AD_SMALL_RECT_BANNER_AREA(xOff,yOff,w,h) \
+        ((Rectangle){w/7*6 - 100 + xOff, h/2 - 325 + yOff, 200, 650})
 #define MAX_SMALL_RECT_CNT 2
-
-#define AD_BIG_RECT_RATE 100 ///5%
-#define MAX_BIG_RECT_CNT 2
 
 #define AD_RANGE_MAX 100
 

@@ -11,7 +11,7 @@ void CreateGame()
     SetTargetFPS(FPS);
     SetRandomSeed((unsigned)time(NULL));
 
-    InitAudioAssets();
+    //InitAudioAssets();
     InitRenderer();
 }
 
@@ -106,7 +106,7 @@ enum Scene MainGame(Player* p, Ball* ball)
 
     unsigned selection = 0;
 
-    if (SpawnAdvert(adArr, adCnt, playArea)) adCnt++;
+    if (SpawnAdvert(adArr, adCnt, playArea)) adCnt += 3;
 
     while (!WindowShouldClose())
     {

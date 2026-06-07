@@ -4,7 +4,7 @@
 
 enum EntityId {ENTITY_PLAYER1, ENTITY_PLAYER2, ENTITY_BALL, 
                ENTITY_AD_HOR_BANNER, ENTITY_AD_VERT_BANNER, 
-               ENTITY_AD_SMALL_RECT, ENTITY_AD_BIG_RECT, ENTITY_CNT};
+               ENTITY_AD_RECT, ENTITY_CNT};
 
 typedef struct Entity {
     enum EntityId id;
