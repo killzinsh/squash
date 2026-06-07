@@ -5,6 +5,8 @@
 
 #include "raylib.h"
 
+#include "entities/entity.h"
+
 #define PLAYER1_RACKET {"assets/sprites/racket_g_nohit.png", "assets/sprites/racket_g_hit.png"}
 #define PLAYER2_RACKET {"assets/sprites/racket_p_nohit.png", "assets/sprites/racket_p_hit.png"}
 #define PLAYER_TEXTURE_CNT 2
@@ -37,6 +39,7 @@ void AssetsPlaySound(enum SoundType soundType);
 
 Font GetFontByStyle(enum FontStyle style);
 Texture2D* GetEntityTextures(enum EntityId id);
+int GetEntityTextureCnt(enum EntityId id);
 Texture2D* GetBorderTexture();
 
 void CloseAssets();

@@ -37,8 +37,6 @@
 #define SPEED_PLAYER_INCREASE 0.25f
 #define SPEED_MAX_INCREASE 4
 
-#define MAX_ADVERT_CNT 5
-
 #define RESET_TIME 2.0f
 #define WINNING_SCORE 3
 

@@ -174,7 +174,11 @@ void RenderBallTexture (Ball* ball)
 
 void RenderAds(Advert* ads[], int adCnt)
 {
-    
+    for (int i = 0; i < adCnt; i++)
+    {
+        
+        DrawTexture(ads[i]->adImage.texture[ads[i]->adImage.active], ads[i]->obj.pos.x, ads[i]->obj.pos.y, WHITE);
+    }
 }
 
 void RenderBorder(int opacity) 

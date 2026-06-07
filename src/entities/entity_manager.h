@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 
+#include "entity.h"
 #include "advert_entity.h"
 #include "../asset_manager.h"
 
@@ -16,23 +17,7 @@
 
 #define BALL_R 20
 
-enum EntityId {ENTITY_PLAYER1 = 0, ENTITY_PLAYER2 = 1, ENTITY_BALL, 
-               ENTITY_AD_HOR_BANNER, ENTITY_AD_VERT_BANNER, 
-               ENTITY_AD_SMALL_RECT, ENTITY_AD_BIG_RECT, ENTITY_CNT};
 enum BallWallColType {COL_NOHIT, COL_LHIT, COL_RHIT, COL_UHIT, COL_DHIT};
-
-typedef struct Entity {
-    enum EntityId id;
-    Vector2 pos;
-    Vector2 vel;
-    float speed;
-} Entity;
-
-typedef struct Sprite {
-    int active;
-    double animTime;
-    Texture2D* texture;
-} Sprite;
 
 typedef struct {
     KeyboardKey left;
@@ -40,7 +25,6 @@ typedef struct {
     KeyboardKey up;
     KeyboardKey down;
     KeyboardKey hit;
-    
 } ControlLayout;
 
 typedef struct
@@ -59,12 +43,6 @@ typedef struct
     Sprite sprite;
     enum BallWallColType wallHitType;
 } Ball;
-
-typedef struct Advert {
-    Entity obj;
-    Sprite closeBox;
-    Sprite adImage;
-} Advert;
 
 void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double curTime);
 void InitPlayerPosition(Player* p, Vector2 pos, float spd);

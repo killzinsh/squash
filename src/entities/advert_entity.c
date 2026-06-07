@@ -8,60 +8,68 @@ void InitAdverts(Advert* ads[], int adCnt)
         ads[i] = NULL;
 }
 
-void SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
-{        
+bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
+{   
+    if (adCnt >= MAX_ADVERT_CNT) return false;
+
     static int horBannerCnt = 0;
     static int vertBannerCnt = 0;
     static int smallRectCnt = 0;
     static int bigRectCnt = 0;
 
     int seed = GetRandomValue(0, AD_RANGE_MAX);
-    if (seed > AD_HOR_BANNER_RATE && horBannerCnt <= AD_RANGE_MAX - AD_HOR_BANNER_RATE)
+    if (seed <= AD_HOR_BANNER_RATE && horBannerCnt <= MAX_HOR_BANNER_CNT)
     {
-
+        ads[adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
     } 
-    else if (seed > AD_VERT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
+    else if (seed <= AD_VERT_LEFT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
     {
-        
+        //ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, );
     }
-    else if (seed > AD_SMALL_RECT_RATE && smallRectCnt <= MAX_SMALL_RECT_CNT)
+    else if (seed <= AD_VERT_RIGHT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
     {
-
+        //ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, );
     }
-    else if ()
+    else if (seed <= AD_SMALL_RECT_RATE && smallRectCnt <= MAX_SMALL_RECT_CNT)
     {
-
+        //ads[adCnt] = CreateAdvert(ENTITY_AD_SMALL_RECT, );
     }
+    else if (bigRectCnt <= MAX_BIG_RECT_CNT)
+    {
+        //ads[adCnt] = CreateAdvert(ENTITY_AD_BIG_RECT, );
+    }
+    
+    printf("pointer to ad -> %p\n", ads[adCnt]);
+    if (ads[adCnt] == NULL)  return false;
+    else return true;
 }
 
-Advert* CreateAdvert(Rectangle adArea)
+Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
 {
     Advert* ad = (Advert*)malloc(1 * sizeof(Advert));
-    ad->obj.id = ENTITY_AD;
-    ad->adImage.active = //get random int for active
-    ad->adImage.texture = //set the random active one
+    ad->obj.id = id;
+    ad->adImage.texture = GetEntityTextures(id);
+    ad->adImage.active = GetRandomValue(0, GetEntityTextureCnt(id)-1);
 
-    switch (adSize)
+    Vector2 textureDimn = {.x = ad->adImage.texture[ad->adImage.active].width,
+                           .y = ad->adImage.texture[ad->adImage.active].height};
+
+    if (textureDimn.x > adArea.width || textureDimn.y > adArea.height)
     {
-    case AD_HOR_BANNER:
-        ad->obj.pos.x = playArea.width / 2;
-        ad->obj.pos.y = (playArea.height + playArea.y);
-        break;
-    case AD_VERT_BANNER:
-        
-        break;
-    case AD_SMALL_RECT:
-        
-        break;
-    case AD_BIG_RECT:
-        
-        break;
-    
-    default:
-        fprintf(stderr, "[ERROR]: Unknown ad size!\n");
         free(ad);
         return NULL;
     }
 
+    ad->obj.pos.x = (float)GetRandomValue(adArea.x, adArea.x + adArea.width - textureDimn.x);
+    ad->obj.pos.y = (float)GetRandomValue(adArea.y, adArea.y + adArea.height - textureDimn.y);
+    
     return ad;
+}
+
+void FreeAdverts(Advert* ads[], int adCnt)
+{
+    for (int i = 0; i < adCnt; i++)
+    {
+        free(ads[i]);
+    }
 }

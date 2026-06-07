@@ -1,5 +1,4 @@
 #include "asset_manager.h"
-#include "entity_manager.h"
 
 static Texture2D p1Textures[PLAYER_TEXTURE_CNT];
 static Texture2D p2Textures[PLAYER_TEXTURE_CNT];
@@ -121,6 +120,24 @@ Texture2D* GetEntityTextures(enum EntityId id)
         default:
             fprintf(stderr, "[ERROR]: Unknown entity id for texture!\n");
             return NULL;
+    }
+}
+
+int GetEntityTextureCnt(enum EntityId id)
+{
+    switch(id)
+    {
+        case ENTITY_PLAYER1:
+            return PLAYER_TEXTURE_CNT;
+        case ENTITY_PLAYER2:
+            return PLAYER_TEXTURE_CNT;
+        case ENTITY_BALL:
+            return BALL_TEXTURE_CNT;
+        case ENTITY_AD_HOR_BANNER:
+            return AD_TEXTURE_HOR_BANNER_CNT;
+        default:
+            fprintf(stderr, "[ERROR]: Unknown entity id for texture count!\n");
+            return 0;
     }
 }
 

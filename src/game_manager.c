@@ -22,6 +22,7 @@ Game InitGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Rectangle playAre
                  .bounces = 0, .curHits = 0, .curGame = 0,
                  .resetStartTime = initTime};
     
+    /*MMOVE TO INIT ALL ENTITIES*/
     InitPlayer(&p[0], ENTITY_PLAYER1, PLAYER1_CTRLS, initTime);
     if(scene == SCENE_GAME) InitPlayer(&p[1], ENTITY_PLAYER2, PLAYER2_CTRLS, initTime);
     
@@ -97,12 +98,15 @@ enum Scene MenuBrowser()
 enum Scene MainGame(Player* p, Ball* ball)
 {
     Rectangle playArea = GetActivePlayArea();
+    
     Advert* adArr[MAX_ADVERT_CNT];
+    int adCnt = 0;
+
     Game game = InitGame(p, ball, adArr, MAX_ADVERT_CNT, playArea, SCENE_GAME);
 
     unsigned selection = 0;
 
-    SpawnAdvert(AD_HOR_BANNER, playArea, seed);
+    if (SpawnAdvert(adArr, adCnt, playArea)) adCnt++;
 
     while (!WindowShouldClose())
     {
@@ -203,6 +207,8 @@ enum Scene MainGame(Player* p, Ball* ball)
         else RenderGame(p, ball, adArr, MAX_ADVERT_CNT, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_GAME);
     }
     
+    FreeAdverts(adArr, adCnt);
+
     return SCENE_EXIT;
 }
 

@@ -3,6 +3,13 @@ TODO: reklamas prototips
 TODO: figure out how to check memory leaks
 TODO: gym mode
 
+CODE IMPROVE: assetmanager get function combined texture and cnt
+CODE IMPROVE: move entity definition to single entity so for advert, and ball and player entities
+there can be struct definition inside the respective header files
+CODE IMPROVE: seperate all entities in respective source files
+CODE IMPROVE: seperate all render manager to entities + overlay renderer
+CODE IMPROVE: init all entities in single funciton call
+
 TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
 TODO: active player white outline
 
