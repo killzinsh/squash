@@ -40,23 +40,22 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
 
             RenderText(countdownStr, (Vector2){WIDTH/2, HEIGHT/2}, TXT_COUNTDOWN_SIZE, FONT_REG, FONT_CENTER, FONT_MID, BLUE);
 
+            /*
             Rectangle horBanner = AD_HOR_BANNER_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
             Rectangle vertBannerL = AD_VERT_LEFT_BANNER_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
             Rectangle vertBannerR = AD_VERT_RIGHT_BANNER_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
             Rectangle rect = AD_RECT_AREA(activePlayArea.x,activePlayArea.y,activePlayArea.width,activePlayArea.height);
             
-
-            DrawRectangle(rect.x, rect.y, rect.width, rect.height, PINK);
-            DrawRectangle(horBanner.x, horBanner.y, horBanner.width, horBanner.height, PURPLE);
-            DrawRectangle(vertBannerL.x, vertBannerL.y, vertBannerL.width, vertBannerL.height, ORANGE);
-            DrawRectangle(vertBannerR.x, vertBannerR.y, vertBannerR.width, vertBannerR.height, YELLOW);
+            DrawRectangle(horBanner.x, horBanner.y, horBanner.width, horBanner.height, (Color){255,0,0,120});
+            DrawRectangle(vertBannerL.x, vertBannerL.y, vertBannerL.width, vertBannerL.height, (Color){0,255,0,120});
+            DrawRectangle(vertBannerR.x, vertBannerR.y, vertBannerR.width, vertBannerR.height, (Color){0,0,255,120});
+            DrawRectangle(rect.x, rect.y, rect.width, rect.height, (Color){255,255,0,120});
+            */
         }
         
         if(state == STATE_GAME)
         {
             RenderBallTexture(ball);
-            RenderAds(ads, adCnt);
-
         }
     
         //DrawRectangle(p[0].obj.pos.x, p[0].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H, (Color){0,0,0,123});
@@ -82,6 +81,8 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
         
         if (state == STATE_GAME)
         {
+            RenderAds(ads, adCnt);
+            
             float ratio = (float)curFrame/(float)borderFrameLen; 
             RenderBorder(ExpInterp(fmin(ratio, 1.0f), BORDER_ANIM_EXP) * BORDER_OPACITY_MAX);
         }
@@ -185,7 +186,7 @@ void RenderAds(Advert* ads[], int adCnt)
     {
         if (IsTextureValid(ads[i]->adImage.texture[ads[i]->adImage.active]) == false)
         {
-            fprintf(stderr, "[ERROR]: Ad texture not valid!\n");
+            //fprintf(stderr, "[ERROR]: Ad texture not valid!\n");
             continue;
         }
         DrawTexture(ads[i]->adImage.texture[ads[i]->adImage.active], 

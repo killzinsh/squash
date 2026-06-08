@@ -2,8 +2,6 @@
 TODO: reklamas prototips
 TODO: figure out how to check memory leaks
 TODO: close reklamas
-TODO: banners are always centered maybe not
-TODO: set random spawning places
 TODO: set spawning time
 
 TODO: ad spawning sfx

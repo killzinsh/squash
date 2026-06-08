@@ -138,6 +138,8 @@ int GetEntityTextureCnt(enum EntityId id)
             return AD_TEXTURE_HOR_BANNER_CNT;
         case ENTITY_AD_VERT_BANNER:
             return AD_TEXTURE_VERT_BANNER_CNT;
+        case ENTITY_AD_RECT:
+            return AD_TEXTURE_RECT_CNT;
         default:
             fprintf(stderr, "[ERROR]: Unknown entity id for texture count!\n");
             return 0;

@@ -9,21 +9,21 @@
 
 #define AD_HOR_BANNER_RATE 50 //50%
 #define AD_HOR_BANNER_AREA(xOff,yOff,w,h) \
-        ((Rectangle){w/2 - 375 + xOff, h/6*5 + yOff, 750, 100}) //750 100
+        ((Rectangle){50, yOff + h - 140, xOff + w - 100, 130}) //750 100
 #define MAX_HOR_BANNER_CNT 1
 
 #define AD_VERT_LEFT_BANNER_RATE 65 //15%
 #define AD_VERT_LEFT_BANNER_AREA(xOff,yOff,w,h) \
-        ((Rectangle){10 + xOff, 10 + yOff, 200, h - yOff - 80})
+        ((Rectangle){10 + xOff, 10 + yOff, 200, h - 80})
 
 #define AD_VERT_RIGHT_BANNER_RATE 80 // 15%
 #define AD_VERT_RIGHT_BANNER_AREA(xOff,yOff,w,h) \
-        ((Rectangle){w - 210 - xOff, 10 + yOff, 200, h - yOff - 80})
+        ((Rectangle){w - 210 - xOff, 10 + yOff, 200, h - 80})
 #define MAX_VERT_BANNER_CNT 2
 
 #define AD_RECT_RATE 100 //20%
 #define AD_RECT_AREA(xOff,yOff,w,h) \
-        ((Rectangle){25 + xOff, 25 + yOff, w - 50 - xOff, h - 50 - yOff})
+        ((Rectangle){140, 10 + yOff, xOff + w - 280, h - 150 + yOff})
 #define MAX_SMALL_RECT_CNT 2
 
 #define AD_RANGE_MAX 100

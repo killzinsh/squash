@@ -37,7 +37,7 @@
 #define SPEED_PLAYER_INCREASE 0.25f
 #define SPEED_MAX_INCREASE 4
 
-#define RESET_TIME 20.0f
+#define RESET_TIME 2.0f
 #define WINNING_SCORE 3
 
 #define GAME_TXT {"REPLAY", "MENU"}
