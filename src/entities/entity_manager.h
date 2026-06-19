@@ -3,55 +3,26 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include "entity.h"
+#include "player_entity.h"
+#include "ball_entity.h"
 #include "advert_entity.h"
 #include "../asset_manager.h"
 
-#include "raylib.h"
-#include "raymath.h"
-
-#define PLAYER_HITBOX_W 120
-#define PLAYER_HITBOX_H 170
-#define PLAYER_HITBOX (Vector2){PLAYER_HITBOX_W, PLAYER_HITBOX_H}
+#define PLAYER1_POS(screenWidth, screenHeight, offsetY) (Vector2){screenWidth/4*3 - PLAYER_HITBOX_W/2, screenHeight/2 + offsetY - PLAYER_HITBOX_H / 2}
+#define PLAYER1_CTRLS (ControlLayout){.left = KEY_J, .right = KEY_L, .up = KEY_I, .down = KEY_K, .hit = KEY_U}
+#define PLAYER2_POS(screenWidth, screenHeight, offsetY) (Vector2){screenWidth/4 - PLAYER_HITBOX_W/2, screenHeight/2 + offsetY - PLAYER_HITBOX_H / 2}
+#define PLAYER2_CTRLS (ControlLayout){.left = KEY_A, .right = KEY_D, .up = KEY_W, .down = KEY_S, .hit = KEY_E}
+#define PLAYER_INIT_SPEED 6
 #define PLAYER_HIT_COOLDOWN 0.75f
 
-#define BALL_R 20
+#define BALL_POS(screenWidth, screenHeight, offsetY) (Vector2){screenWidth/2, screenHeight/2 + offsetY}
+#define BALL_INIT_SPEED 8
 
-enum BallWallColType {COL_NOHIT, COL_LHIT, COL_RHIT, COL_UHIT, COL_DHIT};
+#define INIT_ANGLE_MIN 0
+#define INIT_ANGLE_MAX 360
 
-typedef struct {
-    KeyboardKey left;
-    KeyboardKey right;
-    KeyboardKey up;
-    KeyboardKey down;
-    KeyboardKey hit;
-} ControlLayout;
+#define MAX_ADVERT_CNT 5
 
-typedef struct
-{
-    bool hit;
-    unsigned score;
-    double hitTime;
-    Entity obj;
-    Sprite sprite;
-    ControlLayout ctrl;
-} Player;
 
-typedef struct
-{
-    Entity obj;
-    Sprite sprite;
-    enum BallWallColType wallHitType;
-} Ball;
-
-void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double curTime);
-void InitPlayerPosition(Player* p, Vector2 pos, float spd);
-void InitBall(Ball* ball);
-void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd);
-
-void PlayerInputHandler(Player* p, Rectangle playArea, double curTime);
-
-int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt);
-bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit);
-Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea);
-void SetCollisionAgainstWallType(Ball* ball, Rectangle playArea);
+void InitEntities(Player* p, Ball* ball, AdvertArray* adArr, double curTime);
+void ResetEntities(Player* p, Ball* ball, Rectangle playArea);

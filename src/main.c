@@ -7,13 +7,14 @@ TODO: set spawning time
 TODO: ad spawning sfx
 TODO: ad closing sfx
 
+TODO: fix reklamu graphics
+
 TODO: gym mode
 
 CODE IMPROVE: assetmanager get function combined texture and cnt
 CODE IMPROVE: seperate all entities in respective source files
 CODE IMPROVE: seperate all render manager to entities + overlay renderer
-CODE IMPROVE: init all entities in single funciton call
-CODE IMPROVE: set ball sprite in INIT call
+CODE IMPROVE: init all entities in single funciton call 
 
 TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
 TODO: active player white outline

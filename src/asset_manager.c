@@ -6,6 +6,7 @@ static Texture2D ballTextures[BALL_TEXTURE_CNT];
 static Texture2D adTexturesHorBanner[AD_TEXTURE_HOR_BANNER_CNT];
 static Texture2D adTexturesVertBanner[AD_TEXTURE_VERT_BANNER_CNT];
 static Texture2D adTexturesRect[AD_TEXTURE_RECT_CNT];
+static Texture2D adTexturesExitButton[AD_TEXTURE_EXIT_BUTTON_CNT];
 
 static Texture2D border;
 
@@ -57,6 +58,10 @@ void InitTextureAssets()
     for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
         adTexturesRect[i] = LoadTexture(adTextureRectPath[i]);
     
+    const char* adTextureExitBtnPath[AD_TEXTURE_EXIT_BUTTON_CNT] = AD_TEXTURES_EXIT_BUTTON;
+    for (int i = 0; i < AD_TEXTURE_EXIT_BUTTON_CNT; i++)
+        adTexturesExitButton[i] = LoadTexture(adTextureExitBtnPath[i]);
+
     const char* borderPath = BORDER_FILE; 
     border = LoadTexture(borderPath);
     
@@ -147,6 +152,7 @@ int GetEntityTextureCnt(enum EntityId id)
 }
 
 Texture2D* GetBorderTexture() { return &border; }
+Texture2D* GetCloseButtonTexture() { return adTexturesExitButton; }
 
 void CloseAssets()
 {
@@ -175,6 +181,8 @@ void CloseAssets()
     for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
         if (IsTextureValid(adTexturesRect[i])) UnloadTexture(adTexturesRect[i]);
 
+    for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
+        if (IsTextureValid(adTexturesExitButton[i])) UnloadTexture(adTexturesExitButton[i]);
 
     if (IsTextureValid(border)) UnloadTexture(border);
     

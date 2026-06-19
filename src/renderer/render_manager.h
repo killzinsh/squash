@@ -28,10 +28,16 @@
 #define SPRITE_BALL_W 500
 #define SPRITE_BALL_H 500
 
+#define SPRITE_CLOSE_BUTTON_W 40
+#define SPRITE_CLOSE_BUTTON_H 40
+
 #define PLAYER_ANIM_LEN 0.1f
 
 #define BORDER_ANIM_EXP 5
 #define BORDER_OPACITY_MAX 255
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 typedef struct Game Game;
 
@@ -41,16 +47,15 @@ void InitRenderer();
 Rectangle GetActivePlayArea();
 
 void RenderMenu(int select, const char** opt, int n);
-void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int select, const char** opt, int n, enum RenderGameState state);
+void RenderGame(Player* p, Ball* ball, AdvertArray* ads, Game* game, int select, const char** opt, int n, enum RenderGameState state);
 
-void SetBallSprite(Ball* ball);
 void RenderBallReset(Ball* ball, int frameLen);
 void UpdateBorderAnim(int frameLen);
 void UpdateBallSprite(Ball* ball);
 
 void RenderPlayerTexture (Player* p, Vector2 hitbox);
 void RenderBallTexture (Ball* ball);
-void RenderAds(Advert* ads[], int adCnt);
+void RenderAds(AdvertArray* adArr);
 void RenderBorder(int opacity);
 
 float ExpInterp(float ratio, float exp);

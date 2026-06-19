@@ -29,6 +29,9 @@
                           "assets/overlays/ads/small_rect5.png"}
 #define AD_TEXTURE_RECT_CNT 5
 
+#define AD_TEXTURES_EXIT_BUTTON {"assets/overlays/ads/exit_red3.png", "assets/overlays/ads/exit_yellow3.png"}
+#define AD_TEXTURE_EXIT_BUTTON_CNT 2
+
 #define WALL_SOUNDS {"assets/sounds/wall01.wav", "assets/sounds/wall02.wav", "assets/sounds/wall03.wav"}
 #define WALL_SOUNDS_CNT 3
 #define RACKETHIT_SOUNDS {"assets/sounds/racket01.wav", "assets/sounds/racket02.wav", "assets/sounds/racket03.wav"}
@@ -57,5 +60,6 @@ Font GetFontByStyle(enum FontStyle style);
 Texture2D* GetEntityTextures(enum EntityId id);
 int GetEntityTextureCnt(enum EntityId id);
 Texture2D* GetBorderTexture();
+Texture2D* GetCloseButtonTexture();
 
 void CloseAssets();

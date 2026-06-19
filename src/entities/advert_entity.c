@@ -1,63 +1,53 @@
 #include "advert_entity.h"
 
-void InitAdverts(Advert* ads[], int n)
+void InitAdverts(AdvertArray* adArr, int n)
 {
-    for (int i = 0; i < n; i++)
-        ads[i] = NULL;
+    adArr->maxAdCnt = n;
+    adArr->ads = malloc(sizeof(Advert*) * n);
+    adArr->adCnt = 0;
 }
 
-bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea)
+bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
 {   
-    if (adCnt >= MAX_ADVERT_CNT) return false;
+    if (adArr->adCnt+1 >= adArr->maxAdCnt) return false;
 
     static int horBannerCnt = 0;
     static int vertBannerCnt = 0;
-    static int smallRectCnt = 0;
-    static int bigRectCnt = 0;
+    static int rectCnt = 0;
 
-    ads[adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, 
-        AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-
-    ads[adCnt+1] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
-        AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-    
-    ads[adCnt+2] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
-        AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-    
-    ads[adCnt+3] = CreateAdvert(ENTITY_AD_RECT, 
-        AD_RECT_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-    
-    
-    /*
     int seed = GetRandomValue(0, AD_RANGE_MAX);
     if (seed <= AD_HOR_BANNER_RATE && horBannerCnt <= MAX_HOR_BANNER_CNT)
     {
-        ads[adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, 
+        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, 
             AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+        horBannerCnt++;
     } 
+    
     else if (seed <= AD_VERT_LEFT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
     {
-        ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
+        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
             AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+        vertBannerCnt++;        
     }
+
     else if (seed <= AD_VERT_RIGHT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
     {
-        ads[adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
+        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
             AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+        vertBannerCnt++;
     }
-    else if (seed <= AD_SMALL_RECT_RATE && smallRectCnt <= MAX_SMALL_RECT_CNT)
-    {
-        //ads[adCnt] = CreateAdvert(ENTITY_AD_SMALL_RECT, );
-    }
-    else if (bigRectCnt <= MAX_BIG_RECT_CNT)
-    {
-        //ads[adCnt] = CreateAdvert(ENTITY_AD_BIG_RECT, );
-    }
-    */
 
-    printf("pointer to ad -> %p\n", ads[adCnt]);
-    if (ads[adCnt] == NULL)  return false;
-    else return true;
+    else if (seed <= AD_RECT_RATE && rectCnt <= MAX_SMALL_RECT_CNT)
+    {
+        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_RECT, 
+            AD_RECT_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+        rectCnt++;
+    }
+
+    if (adArr->ads[adArr->adCnt] == NULL) return false;
+
+    adArr->adCnt++;
+    return true;
 }
 
 Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
@@ -75,7 +65,7 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
 
     Vector2 textureDimn = {.x = (float)ad->adImage.texture[ad->adImage.active].width,
                            .y = (float)ad->adImage.texture[ad->adImage.active].height};
-
+        
     if (textureDimn.x > adArea.width || textureDimn.y > adArea.height)
     {
         free(ad);
@@ -85,13 +75,15 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
     ad->obj.pos.x = (float)GetRandomValue(adArea.x, adArea.x + adArea.width - textureDimn.x);
     ad->obj.pos.y = (float)GetRandomValue(adArea.y, adArea.y + adArea.height - textureDimn.y);
 
+    ad->closeBox.active = 0;
+    ad->closeBox.texture = GetCloseButtonTexture();
+
     return ad;
 }
 
-void FreeAdverts(Advert* ads[], int adCnt)
+void FreeAdverts(AdvertArray* adArr)
 {
-    for (int i = 0; i < adCnt; i++)
-    {
-        free(ads[i]);
-    }
+    for (int i = 0; i < adArr->adCnt; i++)
+        free(adArr->ads[i]);
+    free(adArr->ads);
 }

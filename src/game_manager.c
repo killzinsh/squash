@@ -11,28 +11,19 @@ void CreateGame()
     SetTargetFPS(FPS);
     SetRandomSeed((unsigned)time(NULL));
 
-    //InitAudioAssets();
+    InitAudioAssets();
     InitRenderer();
 }
 
-Game InitGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Rectangle playArea, enum Scene scene)
+Game InitGame(Player* p, Ball* ball, AdvertArray* ads, Rectangle playArea)
 {
     double initTime = GetTime();
     Game game = {.resetBall = true, .finished = false, 
                  .bounces = 0, .curHits = 0, .curGame = 0,
                  .resetStartTime = initTime};
     
-    /*MMOVE TO INIT ALL ENTITIES*/
-    InitPlayer(&p[0], ENTITY_PLAYER1, PLAYER1_CTRLS, initTime);
-    if(scene == SCENE_GAME) InitPlayer(&p[1], ENTITY_PLAYER2, PLAYER2_CTRLS, initTime);
-    
-    InitPlayerPosition(&p[0], PLAYER1_POS(playArea.y), PLAYER_INIT_SPEED);
-    if(scene == SCENE_GAME) InitPlayerPosition(&p[1], PLAYER2_POS(playArea.y), PLAYER_INIT_SPEED);
-    
-    InitBall(ball);
-    InitBallPosition(ball, (Vector2){BALL_X, BALL_Y(playArea.y)}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
-
-    InitAdverts(ads, adCnt);
+    InitEntities(p, ball, ads, initTime);
+    ResetEntities(p, ball, playArea);
 
     return game;
 }
@@ -97,14 +88,12 @@ enum Scene MainGame(Player* p, Ball* ball)
 {
     Rectangle playArea = GetActivePlayArea();
     
-    Advert* adArr[MAX_ADVERT_CNT];
-    int adCnt = 0;
-
-    Game game = InitGame(p, ball, adArr, MAX_ADVERT_CNT, playArea, SCENE_GAME);
+    AdvertArray adArr;
+    Game game = InitGame(p, ball, &adArr, playArea);
 
     int selection = 0;
 
-    if (SpawnAdvert(adArr, adCnt, playArea)) adCnt += 4;
+    SpawnAdvert(&adArr, playArea);
 
     while (!WindowShouldClose())
     {
@@ -175,8 +164,8 @@ enum Scene MainGame(Player* p, Ball* ball)
                 UpdateBorderAnim(BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
             }
             
-            SetCollisionAgainstWallType(ball, playArea);
-            unsigned isBounced = BallKinematics(ball, Vector2Add(tmpP.obj.pos, (Vector2){PLAYER_HITBOX_W / 2, PLAYER_HITBOX_H / 2}), playArea, tmpP.hit&&tmpCol);
+            ball->wallHitType = GetCollisionAgainstWallType(Vector2Add(ball->obj.pos, ball->obj.vel), playArea);
+            bool isBounced = BallKinematics(ball, Vector2Add(tmpP.obj.pos, (Vector2){PLAYER_HITBOX_W / 2, PLAYER_HITBOX_H / 2}), playArea, tmpP.hit&&tmpCol);
             game.bounces += isBounced;
             
             if (isBounced) AssetsPlaySound(SFX_WALL);
@@ -185,9 +174,7 @@ enum Scene MainGame(Player* p, Ball* ball)
             {   
                 p[pIndex].score++;
                 
-                InitPlayerPosition(&p[0], PLAYER1_POS(playArea.y), PLAYER_INIT_SPEED);
-                InitPlayerPosition(&p[1], PLAYER2_POS(playArea.y), PLAYER_INIT_SPEED);
-                InitBallPosition(ball, (Vector2){BALL_X, BALL_Y(playArea.y)}, INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
+                ResetEntities(p, ball, playArea);
                 
                 game.curGame++;
                 game.curHits = 0;
@@ -200,12 +187,12 @@ enum Scene MainGame(Player* p, Ball* ball)
         }
 
         const char* tmpTxt[] = GAME_TXT;        
-        if (game.finished) RenderGame(p, ball, adArr, adCnt, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_END);
-        else if (game.resetBall) RenderGame(p, ball, adArr, adCnt, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_START);
-        else RenderGame(p, ball, adArr, adCnt, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_GAME);
+        if (game.finished) RenderGame(p, ball, &adArr, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_END);
+        else if (game.resetBall) RenderGame(p, ball, &adArr, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_START);
+        else RenderGame(p, ball, &adArr, &game, selection, tmpTxt, GAME_TXT_CNT, STATE_GAME);
     }
     
-    FreeAdverts(adArr, adCnt);
+    FreeAdverts(&adArr);
 
     return SCENE_EXIT;
 }

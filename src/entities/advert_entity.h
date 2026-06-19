@@ -27,17 +27,22 @@
 #define MAX_SMALL_RECT_CNT 2
 
 #define AD_RANGE_MAX 100
-#define MAX_ADVERT_CNT 5
 
-typedef struct Advert {
+typedef struct {
     Entity obj;
     Sprite closeBox;
     Sprite adImage;
 } Advert;
 
-void InitAdverts(Advert* ads[], int n);
+typedef struct {
+    int adCnt;
+    int maxAdCnt;
+    Advert** ads;
+} AdvertArray;
 
-bool SpawnAdvert(Advert* ads[], int adCnt, Rectangle playArea);
+void InitAdverts(AdvertArray* adArr, int n);
+
+bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea);
 Advert* CreateAdvert(enum EntityId id, Rectangle adArea);
 
-void FreeAdverts(Advert* ads[], int adCnt);
+void FreeAdverts(AdvertArray* adArr);

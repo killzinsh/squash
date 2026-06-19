@@ -27,14 +27,14 @@ void RenderMenu(int select, const char** opt, int n)
     EndDrawing();
 }
 
-void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int select, const char** opt, int n, enum RenderGameState state)
+void RenderGame(Player* p, Ball* ball, AdvertArray* ads, Game* game, int select, const char** opt, int n, enum RenderGameState state)
 {
     BeginDrawing();
     {
         ClearBackground(WHITE);
         if (state == STATE_START)
         {
-            float t = (GetTime() - game->resetStartTime);
+            float t = (float)GetTime() - game->resetStartTime;
             char countdownStr[TXT_BUFF];
             snprintf(countdownStr, TXT_BUFF, "%.2f", t);
 
@@ -81,10 +81,10 @@ void RenderGame(Player* p, Ball* ball, Advert* ads[], int adCnt, Game* game, int
         
         if (state == STATE_GAME)
         {
-            RenderAds(ads, adCnt);
+            RenderAds(ads);
             
             float ratio = (float)curFrame/(float)borderFrameLen; 
-            RenderBorder(ExpInterp(fmin(ratio, 1.0f), BORDER_ANIM_EXP) * BORDER_OPACITY_MAX);
+            RenderBorder(ExpInterp((float)fmin(ratio, 1.0f), BORDER_ANIM_EXP) * BORDER_OPACITY_MAX);
         }
         
         curFrame++;
@@ -107,7 +107,7 @@ void UpdateBorderAnim(int frameLen)
 
 void UpdateBallSprite(Ball* ball) 
 {   
-    ball->sprite.active = fmin(ball->sprite.active + 1, BALL_TEXTURE_CNT - 1); 
+    ball->sprite.active = MIN(ball->sprite.active + 1, BALL_TEXTURE_CNT - 1); 
 }
 
 void RenderPlayerTexture (Player* p, Vector2 hitbox)
@@ -180,17 +180,29 @@ void RenderBallTexture (Ball* ball)
     DrawTexturePro(ball->sprite.texture[ball->sprite.active], src, dest, origin, 0, WHITE);
 }
 
-void RenderAds(Advert* ads[], int adCnt)
+void RenderAds(AdvertArray* adArr)
 {
-    for (int i = 0; i < adCnt; i++)
+    for (int i = 0; i < adArr->adCnt; i++)
     {
-        if (IsTextureValid(ads[i]->adImage.texture[ads[i]->adImage.active]) == false)
+        const Advert* ad = adArr->ads[i];
+        if (IsTextureValid(ad->adImage.texture[ad->adImage.active]) == false)
         {
-            //fprintf(stderr, "[ERROR]: Ad texture not valid!\n");
+            fprintf(stderr, "[ERROR]: Ad texture not valid!\n");
             continue;
         }
-        DrawTexture(ads[i]->adImage.texture[ads[i]->adImage.active], 
-                    ads[i]->obj.pos.x, ads[i]->obj.pos.y, WHITE);
+        DrawTexture(ad->adImage.texture[ad->adImage.active], 
+                    ad->obj.pos.x, ad->obj.pos.y, WHITE);
+            
+        Rectangle src = {0, 0, ad->closeBox.texture[ad->closeBox.active].width, 
+                               ad->closeBox.texture[ad->closeBox.active].height};
+        Rectangle dest = {ad->adImage.texture[ad->closeBox.active].width + ad->obj.pos.x - SPRITE_CLOSE_BUTTON_W, 
+                          ad->obj.pos.y, 
+                          SPRITE_CLOSE_BUTTON_W, 
+                          SPRITE_CLOSE_BUTTON_H};
+        Vector2 origin = {0,0};
+    
+        //DrawRectangle(ads[i]->obj.pos.x, ads[i]->obj.pos.y, ads[i]->adImage.texture[ads[i]->adImage.active].width, SPRITE_CLOSE_BUTTON_H, BLACK);
+        DrawTexturePro(ad->closeBox.texture[ad->closeBox.active], src, dest, origin, 0, WHITE);
     }
 }
 
