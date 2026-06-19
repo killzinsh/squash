@@ -1,19 +1,18 @@
 /*
 TODO: reklamas prototips
 TODO: figure out how to check memory leaks
-TODO: set spawning time
 
 TODO: ad spawning sfx
 TODO: ad closing sfx
 TODO: ad roundededges
-TODO: ad cool close
+TODO: ad cool close (round edges)
 
 TODO: fix reklamu graphics
+TODO: wipe all ads before restarting
 
 TODO: gym mode
 
 CODE IMPROVE: assetmanager get function combined texture and cnt
-CODE IMPROVE: seperate all entities in respective source files
 CODE IMPROVE: seperate all render manager to entities + overlay renderer
 CODE IMPROVE: UpdateEntity call
 CODE IMPROVE: game is also an entity
@@ -42,11 +41,8 @@ TODO: end screen music loop
 
 int main(void)
 {
-    Player player[2];
-    Ball ball;
-    
     CreateGame();
-    SceneManager(player, &ball, SCENE_MENU);
+    SceneManager(SCENE_MENU);
     CloseGame();
 
     return EXIT_SUCCESS;

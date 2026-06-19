@@ -16,43 +16,19 @@
 #define PAD_MENU_Y 5
 #define PAD_MENU_X 5
 
-#define SPRITE_PLAYER_NOHIT 0
-#define SPRITE_PLAYER_HIT 1
-#define SPRITE_PLAYER_W 177
-#define SPRITE_PLAYER_H 495
-#define SPRITE_PLAYER_RATIO (PLAYER_HITBOX_W / (float)SPRITE_PLAYER_W)
-
-#define SPRITE_PLAYER_ROT_H 7
-#define SPRITE_PLAYER_ROT_DOWN 1
-
-#define SPRITE_BALL_W 500
-#define SPRITE_BALL_H 500
-
-#define PLAYER_ANIM_LEN 0.1f
-
 #define BORDER_ANIM_EXP 5
 #define BORDER_OPACITY_MAX 255
-
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
-typedef struct Game Game;
-
-enum RenderGameState {STATE_START, STATE_GAME, STATE_END};
 
 void InitRenderer();
 Rectangle GetActivePlayArea();
 
 void RenderMenu(int select, const char** opt, int n);
-void RenderGame(Player* p, Ball* ball, AdvertArray* ads, Game* game, int select, const char** opt, int n, enum RenderGameState state);
+void RenderGameStart(Player* p1, Player* p2, float resetTime, int curHits);
+void RenderGame(Player* p1, Player* p2, Ball* ball, AdvertArray* ads, int curHits);
+void RenderGameEnd(Player* p1, Player* p2, int curHits, int select, const char** opt, int n);
 
-void RenderBallReset(Ball* ball, int frameLen);
-void UpdateBorderAnim(int frameLen);
-void UpdateBallSprite(Ball* ball);
+void ResetBorderAnimation(int frameLen);
 
-void RenderPlayerTexture (Player* p, Vector2 hitbox);
-void RenderBallTexture (Ball* ball);
-void RenderAds(AdvertArray* adArr);
 void RenderBorder(int opacity);
 
 float ExpInterp(float ratio, float exp);

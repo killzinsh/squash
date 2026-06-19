@@ -1,10 +1,18 @@
 #include "advert_entity.h"
 
-void InitAdverts(AdvertArray* adArr, int n)
+void InitAdverts(AdvertArray* adArr, int maxCnt, double cooldownTime)
 {
-    adArr->maxAdCnt = n;
-    adArr->ads = malloc(sizeof(Advert*) * (size_t)n);
+    adArr->maxAdCnt = maxCnt;
+    adArr->ads = malloc(sizeof(Advert*) * (size_t)maxCnt);
     adArr->adCnt = 0;
+    adArr->spawnTimeCooldown = cooldownTime;    
+}
+
+void ResetAdverts(AdvertArray* adArr, double curTime)
+{
+    adArr->spawnTimer = curTime;
+    for (int i = 0; i < adArr->adCnt; i++)
+        free(adArr->ads[i]);
 }
 
 bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
@@ -82,13 +90,15 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
     return ad;
 }
 
-void CheckAdPlayerCollision(AdvertArray* adArr, Rectangle playerHitbox1, Rectangle playerHitbox2)
+void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
 {
-    for (int i = 0; i < adArr->adCnt; i++)
+    int removed = 0;
+
+    for (int i = 0, j = 0; i < adArr->adCnt; i++)
     {
         Rectangle adHitbox = {adArr->ads[i]->adImage.texture[adArr->ads[i]->closeBox.active].width + adArr->ads[i]->obj.pos.x - AD_CLOSE_HITBOX.x, 
                               adArr->ads[i]->obj.pos.y, AD_CLOSE_HITBOX.x, AD_CLOSE_HITBOX.y}; 
-        if (CheckCollisionRecs(playerHitbox1, adHitbox) || CheckCollisionRecs(playerHitbox2, adHitbox)) 
+        if (CheckCollisionRecs(pHitbox, adHitbox)) 
         {
             adArr->ads[i]->selected = true;
             adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_TRUE;
@@ -98,20 +108,13 @@ void CheckAdPlayerCollision(AdvertArray* adArr, Rectangle playerHitbox1, Rectang
             adArr->ads[i]->selected = false;
             adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_FALSE;
         }
-    }
-}
 
-void DestroySelectedAds(AdvertArray* adArr)
-{
-    int removed = 0;
-
-    for (int i = 0, j = 0; i < adArr->adCnt; i++)
-    {
-        if (adArr->ads[i]->selected)
+        if (adArr->ads[i]->selected && isHit)
         {
             free(adArr->ads[i]);
             removed++;
         }
+
         else
         {
             adArr->ads[j] = adArr->ads[i];
@@ -121,7 +124,6 @@ void DestroySelectedAds(AdvertArray* adArr)
 
     adArr->adCnt -= removed;
 }
-
 
 void FreeAdverts(AdvertArray* adArr)
 {

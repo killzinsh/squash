@@ -7,12 +7,19 @@ void InitBall(Ball* ball)
     ball->sprite.texture = GetEntityTextures(ENTITY_BALL);
 }
 
-void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd)
+void ResetBall(Ball* ball, Vector2 pos, float minAng, float maxAng, float spd)
 {
-    b->obj.pos = pos;
-    b->obj.speed = spd;
+    ball->obj.pos = pos;
+    ball->obj.speed = spd;
     float startAngle = DEG2RAD * (float)GetRandomValue(minAng, maxAng);
-    b->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, b->obj.speed);
+    ball->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, ball->obj.speed);
+    ball->sprite.active = 0;
+}
+
+void UpgradeBall(Ball* ball, int speedIncrease)
+{
+    ball->obj.speed += speedIncrease;
+    ball->sprite.active = MIN(ball->sprite.active + 1, BALL_TEXTURE_CNT - 1); 
 }
 
 int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt)
@@ -38,9 +45,8 @@ int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt)
     return frameCnt;
 }
 
-bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit)
+void BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit)
 {
-    bool bounced = false;
     b->obj.vel = Vector2Normalize(b->obj.vel);
     if (pHit)
     {
@@ -52,10 +58,8 @@ bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit)
     Vector2 react = GetBallCollisionAgainstPlayArea(Vector2Add(b->obj.pos, b->obj.vel), playArea);
     b->obj.vel.y *= react.y;
     b->obj.vel.x *= react.x;
-    if (react.y == -1 || react.x == -1) bounced = true;
     
     b->obj.pos = Vector2Add(b->obj.pos, b->obj.vel);
-    return bounced;
 }
 
 Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea)
@@ -73,7 +77,7 @@ Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea)
     return result;
 }
 
-enum BallWallColType GetCollisionAgainstWallType(Vector2 futurePos, Rectangle playArea)
+enum BallCollisionType GetCollisionAgainstWallType(Vector2 futurePos, Rectangle playArea)
 {   
     if (futurePos.y < playArea.y + BALL_R)
         return COL_UHIT;

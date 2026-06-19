@@ -6,7 +6,6 @@
 #include "player_entity.h"
 #include "ball_entity.h"
 #include "advert_entity.h"
-#include "../asset_manager.h"
 
 #define PLAYER1_POS(screenWidth, screenHeight, offsetY) (Vector2){screenWidth/4*3 - PLAYER_HITBOX_W/2, screenHeight/2 + offsetY - PLAYER_HITBOX_H / 2}
 #define PLAYER1_CTRLS (ControlLayout){.left = KEY_J, .right = KEY_L, .up = KEY_I, .down = KEY_K, .hit = KEY_U}
@@ -22,6 +21,15 @@
 #define INIT_ANGLE_MAX 360
 
 #define MAX_ADVERT_CNT 5
+#define AD_SPAWNTIME_COOLDOWN 10.0f
 
-void InitEntities(Player* p, Ball* ball, AdvertArray* adArr, double curTime);
-void ResetEntities(Player* p, Ball* ball, Rectangle playArea);
+void InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr);
+void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Rectangle playArea);
+
+bool UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea);
+void UpgradeEntityStats(Player* p1, Player* p2, Ball* ball, int playerSpeedIncrease, int ballSpeedIncrease);
+void UpdatePlayerScore(Player* p1, Player* p2, int activePlayerIndex);
+
+bool IsBallHit(Player* activePlayer, Ball* ball);
+
+void CloseEntities(AdvertArray* adArr);

@@ -23,6 +23,7 @@
 #define BALL_BOUNCE_CNT 3
 #define SPEED_INCREASE_THRESHOLD 5
 #define SPEED_PLAYER_INCREASE 0.25f
+#define SPEED_BALL_INCREASE 1.0f
 #define SPEED_MAX_INCREASE 4
 
 #define RESET_TIME 2.0f
@@ -49,10 +50,10 @@ enum MenuOption {MENU_GAME, MENU_GYM, MENU_EXIT, MENU_CNT};
 enum GameOption {GAME_REPLAY, GAME_MENU, GAME_CNT};
 
 void CreateGame();
-Game InitGame(Player* p, Ball* ball, AdvertArray* ads, Rectangle playArea);
+Game InitGame();
 
-void SceneManager(Player* p, Ball* ball, enum Scene initScene);
+void SceneManager(enum Scene initScene);
 enum Scene MenuBrowser();
-enum Scene MainGame(Player* p, Ball* ball);
+enum Scene MainGame();
 
 void CloseGame();

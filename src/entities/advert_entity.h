@@ -42,16 +42,17 @@ typedef struct {
 typedef struct {
     int adCnt;
     int maxAdCnt;
+    double spawnTimer;
+    double spawnTimeCooldown;
     Advert** ads;
 } AdvertArray;
 
-void InitAdverts(AdvertArray* adArr, int n);
+void InitAdverts(AdvertArray* adArr, int maxCnt, double cooldownTime);
+void ResetAdverts(AdvertArray* adArr, double curTime);
 
 bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea);
 Advert* CreateAdvert(enum EntityId id, Rectangle adArea);
 
-void CheckAdPlayerCollision(AdvertArray* adArr, Rectangle playerHitbox1, Rectangle playerHitbox2);
-
-void DestroySelectedAds(AdvertArray* adArr);
+void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit);
 
 void FreeAdverts(AdvertArray* adArr);

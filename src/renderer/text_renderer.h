@@ -21,7 +21,7 @@ enum MenuRotation {OPT_ROT_VERT, OPT_ROT_HOR};
 
 int GetScrollingTextHeight(const char* str, float size);
 
-void RenderScrollingText(const char* str, float size, int yPos, float vel);
+void RenderScrollingText(const char* str, float yPos);
 void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, enum MenuRotation rot);
 void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style, 
                 enum FontCentering hor, enum FontCentering vert, Color col);

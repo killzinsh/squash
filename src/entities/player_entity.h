@@ -29,7 +29,7 @@ typedef struct
     ControlLayout ctrl;
 } Player;
 
-void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double cooldownTime, double curTime);
-void InitPlayerPosition(Player* p, Vector2 pos, float spd);
+void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double cooldownTime);
+void ResetPlayer(Player* p, Vector2 pos, float spd, double curTime);
 
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime);

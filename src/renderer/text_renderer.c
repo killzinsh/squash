@@ -7,20 +7,20 @@ int GetScrollingTextHeight(const char* str, float size)
     return dimn.y;
 }
 
-void RenderScrollingText(const char* str, float size, int yPos, float vel)
+void RenderScrollingText(const char* str, float yPos)
 {
     static float firstPos = WIDTH;
     
-    Vector2 dimn = MeasureTextEx(GetFontByStyle(FONT_BOLD_ITALIC), str, size, TXT_SPACING);
+    Vector2 dimn = MeasureTextEx(GetFontByStyle(FONT_BOLD_ITALIC), str, TXT_SCROLL_SIZE, TXT_SPACING);
     if (firstPos <= 0 - dimn.x)
         firstPos = 0;
         
     DrawRectangle(0, yPos, WIDTH, dimn.y, BLACK);
     
-    RenderText(str, (Vector2){firstPos, yPos}, size, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);
-    RenderText(str, (Vector2){firstPos + dimn.x, yPos}, size, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);
+    RenderText(str, (Vector2){firstPos, yPos}, TXT_SCROLL_SIZE, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);
+    RenderText(str, (Vector2){firstPos + dimn.x, yPos}, TXT_SCROLL_SIZE, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);
     
-    firstPos -= vel;
+    firstPos -= TXT_SCROLL_VEL;
 }
 
 void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, enum MenuRotation rot)

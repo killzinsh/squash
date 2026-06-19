@@ -8,20 +8,21 @@
 
 #define BALL_R 20
 
-enum BallWallColType {COL_NOHIT, COL_LHIT, COL_RHIT, COL_UHIT, COL_DHIT};
+enum BallCollisionType {COL_NOHIT, COL_PLAYER_HIT, COL_LHIT, COL_RHIT, COL_UHIT, COL_DHIT};
 
 typedef struct
 {
     Entity obj;
     Sprite sprite;
-    enum BallWallColType wallHitType;
+    enum BallCollisionType hitType;
 } Ball;
 
 void InitBall(Ball* ball);
-void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float spd);
+void ResetBall(Ball* ball, Vector2 pos, float minAng, float maxAng, float spd);
+void UpgradeBall(Ball* ball, int speedIncrease);
 
 int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt);
-bool BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit);
+void  BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit);
 
 Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea);
-enum BallWallColType GetCollisionAgainstWallType(Vector2 futurePos, Rectangle playArea);
+enum BallCollisionType GetCollisionAgainstWallType(Vector2 futurePos, Rectangle playArea);
