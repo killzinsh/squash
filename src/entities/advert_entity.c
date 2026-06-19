@@ -3,7 +3,7 @@
 void InitAdverts(AdvertArray* adArr, int n)
 {
     adArr->maxAdCnt = n;
-    adArr->ads = malloc(sizeof(Advert*) * n);
+    adArr->ads = malloc(sizeof(Advert*) * (size_t)n);
     adArr->adCnt = 0;
 }
 
@@ -60,6 +60,7 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
     }
     
     ad->obj.id = id;
+    ad->selected = false;
     ad->adImage.texture = GetEntityTextures(id);
     ad->adImage.active = GetRandomValue(0, GetEntityTextureCnt(id)-1);
 
@@ -80,6 +81,47 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
 
     return ad;
 }
+
+void CheckAdPlayerCollision(AdvertArray* adArr, Rectangle playerHitbox1, Rectangle playerHitbox2)
+{
+    for (int i = 0; i < adArr->adCnt; i++)
+    {
+        Rectangle adHitbox = {adArr->ads[i]->adImage.texture[adArr->ads[i]->closeBox.active].width + adArr->ads[i]->obj.pos.x - AD_CLOSE_HITBOX.x, 
+                              adArr->ads[i]->obj.pos.y, AD_CLOSE_HITBOX.x, AD_CLOSE_HITBOX.y}; 
+        if (CheckCollisionRecs(playerHitbox1, adHitbox) || CheckCollisionRecs(playerHitbox2, adHitbox)) 
+        {
+            adArr->ads[i]->selected = true;
+            adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_TRUE;
+        }
+        else 
+        {
+            adArr->ads[i]->selected = false;
+            adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_FALSE;
+        }
+    }
+}
+
+void DestroySelectedAds(AdvertArray* adArr)
+{
+    int removed = 0;
+
+    for (int i = 0, j = 0; i < adArr->adCnt; i++)
+    {
+        if (adArr->ads[i]->selected)
+        {
+            free(adArr->ads[i]);
+            removed++;
+        }
+        else
+        {
+            adArr->ads[j] = adArr->ads[i];
+            j++;
+        }
+    }
+
+    adArr->adCnt -= removed;
+}
+
 
 void FreeAdverts(AdvertArray* adArr)
 {

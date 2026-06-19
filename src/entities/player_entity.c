@@ -34,16 +34,16 @@ void PlayerInputHandler(Player* p, Rectangle playArea, double curTime)
         p->obj.pos.x = tmpSum.x;
     
     else if (tmpSum.x >= playArea.x)
-        p->obj.pos.x = fmin(playArea.x + playArea.width - PLAYER_HITBOX_W, tmpSum.x);
+        p->obj.pos.x = (float)fmin(playArea.x + playArea.width - PLAYER_HITBOX_W, tmpSum.x);
     
-    else p->obj.pos.x = fmax(playArea.x, tmpSum.x);
+    else p->obj.pos.x = (float)fmax(playArea.x, tmpSum.x);
     
     if (tmpSum.y >= playArea.y && 
         tmpSum.y <= playArea.y + playArea.height - PLAYER_HITBOX_H)
         p->obj.pos.y = tmpSum.y;
     else if (tmpSum.y >= playArea.y)
-        p->obj.pos.y = fmin(playArea.y + playArea.height - PLAYER_HITBOX_H, tmpSum.y);
-    else p->obj.pos.y = fmax(playArea.y, tmpSum.y);
+        p->obj.pos.y = (float)fmin(playArea.y + playArea.height - PLAYER_HITBOX_H, tmpSum.y);
+    else p->obj.pos.y = (float)fmax(playArea.y, tmpSum.y);
     
     if (IsKeyPressed(p->ctrl.hit) && curTime - p->hitTime >= p->hitCooldown)
     {      

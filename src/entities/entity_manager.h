@@ -23,6 +23,5 @@
 
 #define MAX_ADVERT_CNT 5
 
-
 void InitEntities(Player* p, Ball* ball, AdvertArray* adArr, double curTime);
 void ResetEntities(Player* p, Ball* ball, Rectangle playArea);

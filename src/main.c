@@ -1,11 +1,12 @@
 /*
 TODO: reklamas prototips
 TODO: figure out how to check memory leaks
-TODO: close reklamas
 TODO: set spawning time
 
 TODO: ad spawning sfx
 TODO: ad closing sfx
+TODO: ad roundededges
+TODO: ad cool close
 
 TODO: fix reklamu graphics
 
@@ -14,7 +15,9 @@ TODO: gym mode
 CODE IMPROVE: assetmanager get function combined texture and cnt
 CODE IMPROVE: seperate all entities in respective source files
 CODE IMPROVE: seperate all render manager to entities + overlay renderer
-CODE IMPROVE: init all entities in single funciton call 
+CODE IMPROVE: UpdateEntity call
+CODE IMPROVE: game is also an entity
+CODE IMPROVE: all game entities are created in the game manager
 
 TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)
 TODO: active player white outline

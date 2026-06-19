@@ -45,7 +45,7 @@ void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, en
     
     if (rot == OPT_ROT_VERT)
     {
-        int posY = pos.y - totMes.y/2;
+        float posY = pos.y - totMes.y/2;
         for (int i = 0; i < n; i++)
         {
             RenderText(opt[i], (Vector2){pos.x, posY}, TXT_MENU_SIZE, fStyle[i], FONT_CENTER, FONT_TOP, txtColor[i]);
@@ -58,7 +58,7 @@ void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, en
     
     else if (rot == OPT_ROT_HOR)
     {
-        int posX = pos.x - totMes.x/2;
+        float posX = pos.x - totMes.x/2;
         for (int i = 0; i < n; i++)
         {
             RenderText(opt[i], (Vector2){posX, pos.y}, TXT_MENU_SIZE, fStyle[i], FONT_LEFT, FONT_MID, txtColor[i]);

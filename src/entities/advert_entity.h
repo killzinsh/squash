@@ -7,6 +7,10 @@
 #include "entity.h"
 #include "../asset_manager.h"
 
+#define AD_CLOSE_HITBOX (Vector2){40, 40}
+#define AD_HOVER_OVER_HITBOX_FALSE 0
+#define AD_HOVER_OVER_HITBOX_TRUE 1
+
 #define AD_HOR_BANNER_RATE 50 //50%
 #define AD_HOR_BANNER_AREA(xOff,yOff,w,h) \
         ((Rectangle){50, yOff + h - 140, xOff + w - 100, 130}) //750 100
@@ -30,6 +34,7 @@
 
 typedef struct {
     Entity obj;
+    bool selected;
     Sprite closeBox;
     Sprite adImage;
 } Advert;
@@ -44,5 +49,9 @@ void InitAdverts(AdvertArray* adArr, int n);
 
 bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea);
 Advert* CreateAdvert(enum EntityId id, Rectangle adArea);
+
+void CheckAdPlayerCollision(AdvertArray* adArr, Rectangle playerHitbox1, Rectangle playerHitbox2);
+
+void DestroySelectedAds(AdvertArray* adArr);
 
 void FreeAdverts(AdvertArray* adArr);

@@ -11,7 +11,7 @@ void InitBallPosition(Ball* b, Vector2 pos, float minAng, float maxAng, float sp
 {
     b->obj.pos = pos;
     b->obj.speed = spd;
-    float startAngle = DEG2RAD * GetRandomValue(minAng, maxAng);
+    float startAngle = DEG2RAD * (float)GetRandomValue(minAng, maxAng);
     b->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, b->obj.speed);
 }
 

@@ -164,6 +164,15 @@ enum Scene MainGame(Player* p, Ball* ball)
                 UpdateBorderAnim(BallFrameCnt(ball, playArea, BALL_BOUNCE_CNT));
             }
             
+            Rectangle p1Hitbox = {p[0].obj.pos.x, p[0].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H};
+            Rectangle p2Hitbox = {p[1].obj.pos.x, p[1].obj.pos.y, PLAYER_HITBOX_W, PLAYER_HITBOX_H};
+            CheckAdPlayerCollision(&adArr, p1Hitbox, p2Hitbox);
+
+            if (tmpP.hit)
+            {
+                DestroySelectedAds(&adArr);
+            }
+
             ball->wallHitType = GetCollisionAgainstWallType(Vector2Add(ball->obj.pos, ball->obj.vel), playArea);
             bool isBounced = BallKinematics(ball, Vector2Add(tmpP.obj.pos, (Vector2){PLAYER_HITBOX_W / 2, PLAYER_HITBOX_H / 2}), playArea, tmpP.hit&&tmpCol);
             game.bounces += isBounced;

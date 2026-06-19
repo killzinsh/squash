@@ -193,12 +193,12 @@ void RenderAds(AdvertArray* adArr)
         DrawTexture(ad->adImage.texture[ad->adImage.active], 
                     ad->obj.pos.x, ad->obj.pos.y, WHITE);
             
-        Rectangle src = {0, 0, ad->closeBox.texture[ad->closeBox.active].width, 
-                               ad->closeBox.texture[ad->closeBox.active].height};
-        Rectangle dest = {ad->adImage.texture[ad->closeBox.active].width + ad->obj.pos.x - SPRITE_CLOSE_BUTTON_W, 
+        Rectangle src = {0, 0, (float)ad->closeBox.texture[ad->closeBox.active].width, 
+                               (float)ad->closeBox.texture[ad->closeBox.active].height};
+        Rectangle dest = {ad->adImage.texture[ad->closeBox.active].width + ad->obj.pos.x - AD_CLOSE_HITBOX.x, 
                           ad->obj.pos.y, 
-                          SPRITE_CLOSE_BUTTON_W, 
-                          SPRITE_CLOSE_BUTTON_H};
+                          AD_CLOSE_HITBOX.x, 
+                          AD_CLOSE_HITBOX.y};
         Vector2 origin = {0,0};
     
         //DrawRectangle(ads[i]->obj.pos.x, ads[i]->obj.pos.y, ads[i]->adImage.texture[ads[i]->adImage.active].width, SPRITE_CLOSE_BUTTON_H, BLACK);
