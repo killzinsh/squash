@@ -18,8 +18,8 @@ typedef struct
 } Ball;
 
 void InitBall(Ball* ball);
-void ResetBall(Ball* ball, Vector2 pos, float minAng, float maxAng, float spd);
-void UpgradeBall(Ball* ball, int speedIncrease);
+void ResetBall(Ball* ball, Vector2 pos, int minAng, int maxAng, float spd);
+void UpgradeBall(Ball* ball, float speedIncrease);
 
 int BallFrameCnt(Ball* ball, Rectangle playArea, const int bounceCnt);
 void  BallKinematics(Ball* b, Vector2 pCenter, Rectangle playArea, bool pHit);

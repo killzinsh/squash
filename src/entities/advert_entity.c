@@ -1,5 +1,10 @@
 #include "advert_entity.h"
 
+static int horBanner = 0;
+static int vertBannerLeft = 0;
+static int vertBannerRight = 0;
+static int rectCnt = 0;
+
 void InitAdverts(AdvertArray* adArr, int maxCnt, double cooldownTime)
 {
     adArr->maxAdCnt = maxCnt;
@@ -19,37 +24,44 @@ bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
 {   
     if (adArr->adCnt+1 >= adArr->maxAdCnt) return false;
 
-    static int horBannerCnt = 0;
-    static int vertBannerCnt = 0;
-    static int rectCnt = 0;
-
-    int seed = GetRandomValue(0, AD_RANGE_MAX);
-    if (seed <= AD_HOR_BANNER_RATE && horBannerCnt <= MAX_HOR_BANNER_CNT)
-    {
-        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_HOR_BANNER, 
-            AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-        horBannerCnt++;
-    } 
+    int seed = GetRandomValue(0, AD_TYPE_CNT-1);
     
-    else if (seed <= AD_VERT_LEFT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
+    bool isSpawned = false;
+    while (isSpawned == false)
     {
-        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
-            AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-        vertBannerCnt++;        
-    }
+        if (seed == AD_HOR && horBanner < AD_HOR_BANNER_CNT)
+        {
+            adArr->ads[adArr->adCnt] = CreateAdvert(AD_HOR, 
+                    AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+            horBanner++;
+            isSpawned = true;
+        }
 
-    else if (seed <= AD_VERT_RIGHT_BANNER_RATE && vertBannerCnt <= MAX_VERT_BANNER_CNT)
-    {
-        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_VERT_BANNER, 
-            AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-        vertBannerCnt++;
-    }
+        else if (seed == AD_VERT_LEFT && vertBannerLeft < AD_VERT_LEFT_BANNER_CNT)
+        {
+            adArr->ads[adArr->adCnt] = CreateAdvert(AD_VERT_LEFT, 
+                AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+            vertBannerLeft++;
+            isSpawned = true;
+        }
 
-    else if (seed <= AD_RECT_RATE && rectCnt <= MAX_SMALL_RECT_CNT)
-    {
-        adArr->ads[adArr->adCnt] = CreateAdvert(ENTITY_AD_RECT, 
-            AD_RECT_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-        rectCnt++;
+        else if (seed == AD_VERT_RIGHT && vertBannerRight < AD_VERT_RIGHT_BANNER_CNT)
+        {
+            adArr->ads[adArr->adCnt] = CreateAdvert(AD_VERT_RIGHT, 
+                AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+            vertBannerRight++;
+            isSpawned = true;
+        }
+
+        else if (seed == AD_RECT && rectCnt < AD_RECT_CNT)
+        {
+            adArr->ads[adArr->adCnt] = CreateAdvert(AD_RECT, 
+                AD_RECT_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
+            rectCnt++;
+            isSpawned = true;
+        }
+
+        seed = seed%AD_TYPE_CNT;
     }
 
     if (adArr->ads[adArr->adCnt] == NULL) return false;
@@ -58,7 +70,7 @@ bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
     return true;
 }
 
-Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
+Advert* CreateAdvert(enum AdTypes adId, Rectangle adArea)
 {
     Advert* ad = malloc(1 * sizeof(Advert));
     if (ad == NULL)
@@ -67,13 +79,14 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
         return NULL;
     }
     
-    ad->obj.id = id;
+    ad->adType = adId;
+    ad->obj.id = ENTITY_AD;
     ad->selected = false;
-    ad->adImage.texture = GetEntityTextures(id);
-    ad->adImage.active = GetRandomValue(0, GetEntityTextureCnt(id)-1);
+    ad->adImage.textures = GetAdvertTexture(adId);
+    ad->adImage.active = GetRandomValue(0, ad->adImage.textures.cnt -1);
 
-    Vector2 textureDimn = {.x = (float)ad->adImage.texture[ad->adImage.active].width,
-                           .y = (float)ad->adImage.texture[ad->adImage.active].height};
+    Vector2 textureDimn = {.x = (float)ad->adImage.textures.textures[ad->adImage.active].width,
+                           .y = (float)ad->adImage.textures.textures[ad->adImage.active].height};
         
     if (textureDimn.x > adArea.width || textureDimn.y > adArea.height)
     {
@@ -81,13 +94,22 @@ Advert* CreateAdvert(enum EntityId id, Rectangle adArea)
         return NULL;
     }
 
-    ad->obj.pos.x = (float)GetRandomValue(adArea.x, adArea.x + adArea.width - textureDimn.x);
-    ad->obj.pos.y = (float)GetRandomValue(adArea.y, adArea.y + adArea.height - textureDimn.y);
+    ad->obj.pos.x = (float)GetRandomValue((int)adArea.x, adArea.x + adArea.width - textureDimn.x);
+    ad->obj.pos.y = (float)GetRandomValue((int)adArea.y, adArea.y + adArea.height - textureDimn.y);
 
     ad->closeBox.active = 0;
-    ad->closeBox.texture = GetCloseButtonTexture();
+    ad->closeBox.textures.textures = GetCloseButtonTexture();
 
     return ad;
+}
+
+void ClearAdvertSelection(AdvertArray* adArr)
+{
+    for (int i = 0; i < adArr->adCnt; i++)
+    {
+        adArr->ads[i]->selected = false;
+        adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_FALSE;
+    }
 }
 
 void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
@@ -96,21 +118,34 @@ void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
 
     for (int i = 0, j = 0; i < adArr->adCnt; i++)
     {
-        Rectangle adHitbox = {adArr->ads[i]->adImage.texture[adArr->ads[i]->closeBox.active].width + adArr->ads[i]->obj.pos.x - AD_CLOSE_HITBOX.x, 
+        Rectangle adHitbox = {adArr->ads[i]->adImage.textures.textures[adArr->ads[i]->closeBox.active].width + adArr->ads[i]->obj.pos.x - AD_CLOSE_HITBOX.x, 
                               adArr->ads[i]->obj.pos.y, AD_CLOSE_HITBOX.x, AD_CLOSE_HITBOX.y}; 
         if (CheckCollisionRecs(pHitbox, adHitbox)) 
         {
             adArr->ads[i]->selected = true;
             adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_TRUE;
         }
-        else 
-        {
-            adArr->ads[i]->selected = false;
-            adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_FALSE;
-        }
 
         if (adArr->ads[i]->selected && isHit)
         {
+            switch (adArr->ads[i]->adType)
+            {
+            case AD_HOR:
+                horBanner--;
+                break;
+            case AD_VERT_LEFT:
+                vertBannerLeft--;
+                break;
+            case AD_VERT_RIGHT:
+                vertBannerRight--;
+                break;
+            case AD_RECT:
+                rectCnt--;
+                break;
+            default:
+                break;
+            }
+
             free(adArr->ads[i]);
             removed++;
         }

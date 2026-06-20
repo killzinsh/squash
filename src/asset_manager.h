@@ -45,11 +45,6 @@
 enum FontStyle {FONT_REG, FONT_BOLD, FONT_BOLD_ITALIC, FONT_STYLE_CNT};
 enum SoundType {SFX_WALL, SFX_RACKET, SFX_CNT};
 
-typedef struct {
-    int cnt;
-    Texture2D* textures;
-} TextureArray;
-
 void InitAudioAssets();
 void InitTextureAssets();
 void InitFontAssets();
@@ -57,8 +52,9 @@ void InitFontAssets();
 void AssetsPlaySound(enum SoundType soundType);
 
 Font GetFontByStyle(enum FontStyle style);
-Texture2D* GetEntityTextures(enum EntityId id);
-int GetEntityTextureCnt(enum EntityId id);
+TextureArray GetBallTexture(enum EntityId ballId);
+TextureArray GetPlayerTexture(enum PlayerTypes playerType);
+TextureArray GetAdvertTexture(enum AdTypes adType);
 Texture2D* GetBorderTexture();
 Texture2D* GetCloseButtonTexture();
 

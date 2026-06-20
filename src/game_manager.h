@@ -20,7 +20,7 @@
 
 #define MIN_HIT_DIFF 20
 
-#define BALL_BOUNCE_CNT 3
+#define BALL_BOUNCE_CNT 20
 #define SPEED_INCREASE_THRESHOLD 5
 #define SPEED_PLAYER_INCREASE 0.25f
 #define SPEED_BALL_INCREASE 1.0f
@@ -39,9 +39,9 @@ typedef struct Game
 {
     bool resetBall;
     bool finished;
-    unsigned bounces;
-    unsigned curHits;
-    unsigned curGame;
+    int bounces;
+    int curHits;
+    int curGame;
     double resetStartTime;
 } Game;
 

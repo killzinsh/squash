@@ -1,11 +1,11 @@
 #include "asset_manager.h"
 
-static Texture2D p1Textures[PLAYER_TEXTURE_CNT];
-static Texture2D p2Textures[PLAYER_TEXTURE_CNT];
-static Texture2D ballTextures[BALL_TEXTURE_CNT];
-static Texture2D adTexturesHorBanner[AD_TEXTURE_HOR_BANNER_CNT];
-static Texture2D adTexturesVertBanner[AD_TEXTURE_VERT_BANNER_CNT];
-static Texture2D adTexturesRect[AD_TEXTURE_RECT_CNT];
+static TextureArray p1Textures;
+static TextureArray p2Textures;
+static TextureArray ballTextures;
+static TextureArray adTexturesHorBanner;
+static TextureArray adTexturesVertBanner;
+static TextureArray adTexturesRect;
 static Texture2D adTexturesExitButton[AD_TEXTURE_EXIT_BUTTON_CNT];
 
 static Texture2D border;
@@ -36,27 +36,40 @@ void InitAudioAssets()
 void InitTextureAssets()
 {
     const char* p1TexturePath[PLAYER_TEXTURE_CNT] = PLAYER1_RACKET;
+    p1Textures.cnt = PLAYER_TEXTURE_CNT;
+    p1Textures.textures = malloc(sizeof(Texture2D) * PLAYER_TEXTURE_CNT);
+    for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
+        p1Textures.textures[i] = LoadTexture(p1TexturePath[i]);
+
     const char* p2TexturePath[PLAYER_TEXTURE_CNT] = PLAYER2_RACKET;
+    p2Textures.cnt = PLAYER_TEXTURE_CNT;
+    p2Textures.textures = malloc(sizeof(Texture2D) * PLAYER_TEXTURE_CNT);
     for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
-        p1Textures[i] = LoadTexture(p1TexturePath[i]);
-    for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
-        p2Textures[i] = LoadTexture(p2TexturePath[i]);
+        p2Textures.textures[i] = LoadTexture(p2TexturePath[i]);
     
     const char* ballTexturePath[BALL_TEXTURE_CNT] = BALL_TEXTURES;
+    ballTextures.cnt = BALL_TEXTURE_CNT;
+    ballTextures.textures = malloc(sizeof(Texture2D) * BALL_TEXTURE_CNT);
     for (int i = 0; i < BALL_TEXTURE_CNT; i++)
-        ballTextures[i] = LoadTexture(ballTexturePath[i]);
+        ballTextures.textures[i] = LoadTexture(ballTexturePath[i]);
 
     const char* adTextureHorPath[AD_TEXTURE_HOR_BANNER_CNT] = AD_TEXTURES_HOR_BANNER;
-    for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
-        adTexturesHorBanner[i] = LoadTexture(adTextureHorPath[i]);
+    adTexturesHorBanner.cnt = AD_TEXTURE_HOR_BANNER_CNT;
+    adTexturesHorBanner.textures = malloc(sizeof(Texture2D) * AD_TEXTURE_HOR_BANNER_CNT);
+    for (int i = 0; i < adTexturesHorBanner.cnt; i++)
+        adTexturesHorBanner.textures[i] = LoadTexture(adTextureHorPath[i]);
     
     const char* adTextureVertPath[AD_TEXTURE_VERT_BANNER_CNT] = AD_TEXTURES_VERT_BANNER;
+    adTexturesVertBanner.cnt = AD_TEXTURE_VERT_BANNER_CNT;
+    adTexturesVertBanner.textures = malloc(sizeof(Texture2D) * AD_TEXTURE_VERT_BANNER_CNT);
     for (int i = 0; i < AD_TEXTURE_VERT_BANNER_CNT; i++)
-        adTexturesVertBanner[i] = LoadTexture(adTextureVertPath[i]);
+        adTexturesVertBanner.textures[i] = LoadTexture(adTextureVertPath[i]);
     
     const char* adTextureRectPath[AD_TEXTURE_RECT_CNT] = AD_TEXTURES_RECT;
+    adTexturesRect.cnt = AD_TEXTURE_RECT_CNT;
+    adTexturesRect.textures = malloc(sizeof(Texture2D) * AD_TEXTURE_RECT_CNT);
     for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
-        adTexturesRect[i] = LoadTexture(adTextureRectPath[i]);
+        adTexturesRect.textures[i] = LoadTexture(adTextureRectPath[i]);
     
     const char* adTextureExitBtnPath[AD_TEXTURE_EXIT_BUTTON_CNT] = AD_TEXTURES_EXIT_BUTTON;
     for (int i = 0; i < AD_TEXTURE_EXIT_BUTTON_CNT; i++)
@@ -107,47 +120,37 @@ Font GetFontByStyle(enum FontStyle style)
     }
 }
 
-Texture2D* GetEntityTextures(enum EntityId id)
+TextureArray GetBallTexture(enum EntityId ballId)
 {
-    switch(id)
+    if (ballId == ENTITY_BALL) return ballTextures;
+}
+TextureArray GetPlayerTexture(enum PlayerTypes playerType)
+{
+    switch (playerType)
     {
-        case ENTITY_PLAYER1:
-            return p1Textures;
-        case ENTITY_PLAYER2:
-            return p2Textures;
-        case ENTITY_BALL:
-            return ballTextures;
-        case ENTITY_AD_HOR_BANNER:
-            return adTexturesHorBanner;
-        case ENTITY_AD_VERT_BANNER:
-            return adTexturesVertBanner;
-        case ENTITY_AD_RECT:
-            return adTexturesRect;
-        default:
-            fprintf(stderr, "[ERROR]: Unknown entity id for texture!\n");
-            return NULL;
+    case PLAYER_ONE:
+        return p1Textures;
+    case PLAYER_TWO:
+        return p2Textures;
+    default:
+        break;
     }
 }
 
-int GetEntityTextureCnt(enum EntityId id)
+TextureArray GetAdvertTexture(enum AdTypes adType)
 {
-    switch(id)
+    switch (adType)
     {
-        case ENTITY_PLAYER1:
-            return PLAYER_TEXTURE_CNT;
-        case ENTITY_PLAYER2:
-            return PLAYER_TEXTURE_CNT;
-        case ENTITY_BALL:
-            return BALL_TEXTURE_CNT;
-        case ENTITY_AD_HOR_BANNER:
-            return AD_TEXTURE_HOR_BANNER_CNT;
-        case ENTITY_AD_VERT_BANNER:
-            return AD_TEXTURE_VERT_BANNER_CNT;
-        case ENTITY_AD_RECT:
-            return AD_TEXTURE_RECT_CNT;
-        default:
-            fprintf(stderr, "[ERROR]: Unknown entity id for texture count!\n");
-            return 0;
+    case AD_HOR:
+        return adTexturesHorBanner;
+    case AD_VERT_LEFT:
+        return adTexturesVertBanner;
+    case AD_VERT_RIGHT:
+        return adTexturesVertBanner;
+    case AD_RECT:
+        return adTexturesRect;
+    default:
+        break;
     }
 }
 
@@ -165,21 +168,34 @@ void CloseAssets()
         if (IsFontValid(fonts[i])) UnloadFont(fonts[i]);
     
     for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
-        if(IsTextureValid(p1Textures[i])) UnloadTexture(p1Textures[i]);
+        if(IsTextureValid(p1Textures.textures[i])) 
+            UnloadTexture(p1Textures.textures[i]);
+    free(p1Textures.textures);
+
     for (int i = 0; i < PLAYER_TEXTURE_CNT; i++)
-        if(IsTextureValid(p2Textures[i])) UnloadTexture(p2Textures[i]);    
+        if(IsTextureValid(p2Textures.textures[i])) 
+            UnloadTexture(p2Textures.textures[i]);
+    free(p2Textures.textures);    
 
     for (int i = 0; i < BALL_TEXTURE_CNT; i++)
-        if (IsTextureValid(ballTextures[i])) UnloadTexture(ballTextures[i]);
-    
+        if (IsTextureValid(ballTextures.textures[i])) 
+            UnloadTexture(ballTextures.textures[i]);
+    free(ballTextures.textures);
+
     for (int i = 0; i < AD_TEXTURE_HOR_BANNER_CNT; i++)
-        if (IsTextureValid(adTexturesHorBanner[i])) UnloadTexture(adTexturesHorBanner[i]);
+        if (IsTextureValid(adTexturesHorBanner.textures[i])) 
+            UnloadTexture(adTexturesHorBanner.textures[i]);
+    free(adTexturesHorBanner.textures);
     
     for (int i = 0; i < AD_TEXTURE_VERT_BANNER_CNT; i++)
-        if (IsTextureValid(adTexturesVertBanner[i])) UnloadTexture(adTexturesVertBanner[i]);
+        if (IsTextureValid(adTexturesVertBanner.textures[i])) 
+            UnloadTexture(adTexturesVertBanner.textures[i]);
+    free(adTexturesVertBanner.textures);
 
     for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
-        if (IsTextureValid(adTexturesRect[i])) UnloadTexture(adTexturesRect[i]);
+        if (IsTextureValid(adTexturesRect.textures[i])) 
+            UnloadTexture(adTexturesRect.textures[i]);
+    free(adTexturesRect.textures);
 
     for (int i = 0; i < AD_TEXTURE_RECT_CNT; i++)
         if (IsTextureValid(adTexturesExitButton[i])) UnloadTexture(adTexturesExitButton[i]);

@@ -2,8 +2,8 @@
 
 void InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr)
 {
-    InitPlayer(p1, ENTITY_PLAYER1, PLAYER1_CTRLS, PLAYER_HIT_COOLDOWN);
-    InitPlayer(p2, ENTITY_PLAYER2, PLAYER2_CTRLS, PLAYER_HIT_COOLDOWN);
+    InitPlayer(p1, PLAYER_ONE, PLAYER1_CTRLS, PLAYER_HIT_COOLDOWN);
+    InitPlayer(p2, PLAYER_TWO, PLAYER2_CTRLS, PLAYER_HIT_COOLDOWN);
     InitBall(ball);
     InitAdverts(adArr, MAX_ADVERT_CNT, AD_SPAWNTIME_COOLDOWN);
 }
@@ -17,7 +17,7 @@ void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Recta
     ResetAdverts(adArr, curTime);
 }
 
-bool UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea)
+void UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea)
 {
     double curTime = GetTime();
 
@@ -37,6 +37,7 @@ bool UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, A
 
     BallKinematics(ball, Vector2Add(activePlayer->obj.pos, (Vector2){PLAYER_HITBOX_W / 2, PLAYER_HITBOX_H / 2}), playArea, isHit);
 
+    ClearAdvertSelection(adArr);
     AdvertPlayerCollision(adArr, p1->obj.curHitbox, p1->hit);
     AdvertPlayerCollision(adArr, p2->obj.curHitbox, p2->hit);
 
@@ -47,7 +48,7 @@ bool UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, A
     }
 }
 
-void UpgradeEntityStats(Player* p1, Player* p2, Ball* ball, int playerSpeedIncrease, int ballSpeedIncrease)
+void UpgradeEntityStats(Player* p1, Player* p2, Ball* ball, float playerSpeedIncrease, float ballSpeedIncrease)
 {
     p1->obj.speed += playerSpeedIncrease;
     p2->obj.speed += playerSpeedIncrease;

@@ -21,13 +21,13 @@
 #define INIT_ANGLE_MAX 360
 
 #define MAX_ADVERT_CNT 5
-#define AD_SPAWNTIME_COOLDOWN 10.0f
+#define AD_SPAWNTIME_COOLDOWN 5.0f
 
 void InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr);
 void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Rectangle playArea);
 
-bool UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea);
-void UpgradeEntityStats(Player* p1, Player* p2, Ball* ball, int playerSpeedIncrease, int ballSpeedIncrease);
+void UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea);
+void UpgradeEntityStats(Player* p1, Player* p2, Ball* ball, float playerSpeedIncrease, float ballSpeedIncrease);
 void UpdatePlayerScore(Player* p1, Player* p2, int activePlayerIndex);
 
 bool IsBallHit(Player* activePlayer, Ball* ball);

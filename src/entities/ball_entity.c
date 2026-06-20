@@ -4,19 +4,19 @@ void InitBall(Ball* ball)
 {
     ball->obj.id = ENTITY_BALL;
     ball->sprite.active = 0;
-    ball->sprite.texture = GetEntityTextures(ENTITY_BALL);
+    ball->sprite.textures = GetBallTexture(ENTITY_BALL);
 }
 
-void ResetBall(Ball* ball, Vector2 pos, float minAng, float maxAng, float spd)
+void ResetBall(Ball* ball, Vector2 pos, int minAng, int maxAng, float spd)
 {
     ball->obj.pos = pos;
     ball->obj.speed = spd;
     float startAngle = DEG2RAD * (float)GetRandomValue(minAng, maxAng);
-    ball->obj.vel = Vector2Scale((Vector2){cos(startAngle), sin(startAngle)}, ball->obj.speed);
+    ball->obj.vel = Vector2Scale((Vector2){(float)cos(startAngle), (float)sin(startAngle)}, ball->obj.speed);
     ball->sprite.active = 0;
 }
 
-void UpgradeBall(Ball* ball, int speedIncrease)
+void UpgradeBall(Ball* ball, float speedIncrease)
 {
     ball->obj.speed += speedIncrease;
     ball->sprite.active = MIN(ball->sprite.active + 1, BALL_TEXTURE_CNT - 1); 

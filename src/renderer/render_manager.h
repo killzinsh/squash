@@ -11,7 +11,7 @@
 
 #define WIDTH 1000
 #define HEIGHT 800
-#define SCREEN (Vector2){WIDTH, HEIGHT}
+#define SCREEN (Vector2){(float)WIDTH, (float)HEIGHT}
 
 #define PAD_MENU_Y 5
 #define PAD_MENU_X 5

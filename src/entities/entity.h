@@ -5,9 +5,9 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-enum EntityId {ENTITY_PLAYER1, ENTITY_PLAYER2, ENTITY_BALL, 
-               ENTITY_AD_HOR_BANNER, ENTITY_AD_VERT_BANNER, 
-               ENTITY_AD_RECT, ENTITY_CNT};
+enum EntityId {ENTITY_PLAYER, ENTITY_BALL, ENTITY_AD, ENTITY_CNT};
+enum PlayerTypes {PLAYER_ONE, PLAYER_TWO, PLAYER_CNT};
+enum AdTypes {AD_HOR, AD_VERT_LEFT, AD_VERT_RIGHT, AD_RECT, AD_TYPE_CNT};
 
 typedef struct Entity {
     enum EntityId id;
@@ -17,8 +17,13 @@ typedef struct Entity {
     Rectangle curHitbox;
 } Entity;
 
+typedef struct {
+    int cnt;
+    Texture2D* textures;
+} TextureArray;
+
 typedef struct Sprite {
     int active;
     double animTime;
-    Texture2D* texture;
+    TextureArray textures;
 } Sprite;

@@ -20,6 +20,7 @@ typedef struct {
 
 typedef struct
 {
+    enum PlayerTypes playerType;
     bool hit;
     unsigned score;
     double hitTime;
@@ -29,7 +30,7 @@ typedef struct
     ControlLayout ctrl;
 } Player;
 
-void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double cooldownTime);
+void InitPlayer(Player* p, enum PlayerTypes idPlayer, ControlLayout ctrls, double cooldownTime);
 void ResetPlayer(Player* p, Vector2 pos, float spd, double curTime);
 
 void PlayerInputHandler(Player* p, Rectangle playArea, double curTime);

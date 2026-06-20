@@ -44,8 +44,13 @@ void SceneManager(enum Scene initScene)
             case SCENE_MENU:
                 curScene = MenuBrowser();
                 break;
+            case SCENE_GYM:
+                break;
             case SCENE_EXIT:
                 return;
+            default:
+                fprintf(stderr, "[ERROR]: Scene unrecognized!\n");
+                return;    
         }
     }
 }
@@ -174,7 +179,7 @@ enum Scene MainGame()
 
         const char* tmpTxt[] = GAME_TXT;        
         if (game.finished) RenderGameEnd(&player1, &player2, game.curHits, selection, tmpTxt, GAME_TXT_CNT);
-        else if (game.resetBall) RenderGameStart(&player1, &player2, game.resetStartTime, game.curHits);
+        else if (game.resetBall) RenderGameStart(&player1, &player2, (float)game.resetStartTime, game.curHits);
         else RenderGame(&player1, &player2, &ball, &adArr, game.curHits);
     }
 

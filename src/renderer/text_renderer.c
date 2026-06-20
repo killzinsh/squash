@@ -4,7 +4,7 @@
 int GetScrollingTextHeight(const char* str, float size)
 {
     Vector2 dimn = MeasureTextEx(GetFontByStyle(FONT_BOLD_ITALIC), str, size, TXT_SPACING);
-    return dimn.y;
+    return (int)dimn.y;
 }
 
 void RenderScrollingText(const char* str, float yPos)
@@ -15,7 +15,7 @@ void RenderScrollingText(const char* str, float yPos)
     if (firstPos <= 0 - dimn.x)
         firstPos = 0;
         
-    DrawRectangle(0, yPos, WIDTH, dimn.y, BLACK);
+    DrawRectangle(0, (int)yPos, WIDTH, (int)dimn.y, BLACK);
     
     RenderText(str, (Vector2){firstPos, yPos}, TXT_SCROLL_SIZE, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);
     RenderText(str, (Vector2){firstPos + dimn.x, yPos}, TXT_SCROLL_SIZE, FONT_BOLD_ITALIC, FONT_LEFT, FONT_TOP, WHITE);

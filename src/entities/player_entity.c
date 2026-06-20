@@ -1,12 +1,13 @@
 #include "player_entity.h"
 
-void InitPlayer(Player* p, enum EntityId id, ControlLayout ctrls, double cooldownTime)
+void InitPlayer(Player* p, enum PlayerTypes idPlayer, ControlLayout ctrls, double cooldownTime)
 {
-    p->obj.id = id;
+    p->playerType = idPlayer;
+    p->obj.id = ENTITY_PLAYER;
     p->ctrl = ctrls;
     p->score = 0;
     p->hitCooldown = cooldownTime;
-    p->sprite.texture = GetEntityTextures(id);
+    p->sprite.textures = GetPlayerTexture(idPlayer);
 }
 
 void ResetPlayer(Player* p, Vector2 pos, float spd, double curTime)
