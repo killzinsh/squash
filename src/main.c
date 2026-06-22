@@ -7,12 +7,8 @@ TODO: ad cool close (round edges)
 
 TODO: gym mode
 
-BUGS: Segmentation error for ad array
-
-CODE IMPROVE: assetmanager get function combined texture and cnt
 CODE IMPROVE: seperate all render manager to overlay renderer
 CODE IMPROVE: game is also an entity (after gym mode implementation)
-
 CODE IMPROVE: make unified menu call
 
 TODO: backgorund images / fade between multiple (debesis, plava, jura, mezs, akmenains kalns)

@@ -103,7 +103,9 @@ void RenderBorder(int opacity)
     Color col = {255, 255, 255, opacity};
     Texture2D borderTexture = *GetBorderTexture();
     
-    DrawTexturePro(borderTexture, (Rectangle){0,0, borderTexture.width, borderTexture.height}, activePlayArea, (Vector2){0,0}, 0, col);
+    DrawTexturePro(borderTexture, 
+                   (Rectangle){0,0, (float)borderTexture.width, (float)borderTexture.height}, 
+                   activePlayArea, (Vector2){0,0}, 0, col);
 }
 
 float ExpInterp(float ratio, float exp)

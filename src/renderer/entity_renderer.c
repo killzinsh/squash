@@ -96,7 +96,7 @@ void RenderAds(AdvertArray* adArr)
             
         Rectangle src = {0, 0, (float)ad->closeBox.textures.textures[ad->closeBox.active].width, 
                                (float)ad->closeBox.textures.textures[ad->closeBox.active].height};
-        Rectangle dest = {ad->adImage.textures.textures[ad->closeBox.active].width + ad->obj.pos.x - AD_CLOSE_HITBOX.x, 
+        Rectangle dest = {(float)ad->adImage.textures.textures[ad->closeBox.active].width + ad->obj.pos.x - AD_CLOSE_HITBOX.x, 
                           ad->obj.pos.y, 
                           AD_CLOSE_HITBOX.x, 
                           AD_CLOSE_HITBOX.y};

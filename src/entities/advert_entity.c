@@ -22,7 +22,7 @@ void ResetAdverts(AdvertArray* adArr, double curTime)
 
 bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
 {   
-    if (adArr->adCnt+1 >= adArr->maxAdCnt) return false;
+    if (adArr->adCnt >= adArr->maxAdCnt) return false;
 
     int seed = GetRandomValue(0, AD_TYPE_CNT-1);
     
@@ -61,7 +61,7 @@ bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
             isSpawned = true;
         }
 
-        seed = seed%AD_TYPE_CNT;
+        seed = (seed+1)%AD_TYPE_CNT;
     }
 
     if (adArr->ads[adArr->adCnt] == NULL) return false;
@@ -116,7 +116,7 @@ void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
 {
     int removed = 0;
 
-    for (int i = 0, j = 0; i < adArr->adCnt; i++)
+    for (int i = 0; i < adArr->adCnt; i++)
     {
         Rectangle adHitbox = {adArr->ads[i]->adImage.textures.textures[adArr->ads[i]->closeBox.active].width + adArr->ads[i]->obj.pos.x - AD_CLOSE_HITBOX.x, 
                               adArr->ads[i]->obj.pos.y, AD_CLOSE_HITBOX.x, AD_CLOSE_HITBOX.y}; 
@@ -124,40 +124,52 @@ void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
         {
             adArr->ads[i]->selected = true;
             adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_TRUE;
-        }
 
-        if (adArr->ads[i]->selected && isHit)
-        {
-            switch (adArr->ads[i]->adType)
+            if (isHit)
             {
-            case AD_HOR:
-                horBanner--;
-                break;
-            case AD_VERT_LEFT:
-                vertBannerLeft--;
-                break;
-            case AD_VERT_RIGHT:
-                vertBannerRight--;
-                break;
-            case AD_RECT:
-                rectCnt--;
-                break;
-            default:
-                break;
+                switch (adArr->ads[i]->adType)
+                {
+                case AD_HOR:
+                    horBanner--;
+                    break;
+                case AD_VERT_LEFT:
+                    vertBannerLeft--;
+                    break;
+                case AD_VERT_RIGHT:
+                    vertBannerRight--;
+                    break;
+                case AD_RECT:
+                    rectCnt--;
+                    break;
+                default:
+                    break;
+                }
+
+                free(adArr->ads[i]);
+                adArr->ads[i] = NULL;
+                removed++;
             }
-
-            free(adArr->ads[i]);
-            removed++;
-        }
-
-        else
-        {
-            adArr->ads[j] = adArr->ads[i];
-            j++;
         }
     }
 
+    ReorderAdArray(adArr);
     adArr->adCnt -= removed;
+}
+
+void ReorderAdArray(AdvertArray* adArr)
+{
+    for (int i = 0; i < adArr->adCnt; i++)
+    {
+        if (adArr->ads[i] != NULL) continue;
+        for (int j = i+1; j < adArr->adCnt; j++)
+        {
+            if (adArr->ads[j] == NULL) continue;
+
+            adArr->ads[i] = adArr->ads[j];
+            adArr->ads[j] = NULL;
+            break;
+        }
+    }
 }
 
 void FreeAdverts(AdvertArray* adArr)

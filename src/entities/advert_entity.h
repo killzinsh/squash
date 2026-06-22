@@ -51,5 +51,6 @@ Advert* CreateAdvert(enum AdTypes adId, Rectangle adArea);
 
 void ClearAdvertSelection(AdvertArray* adArr);
 void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit);
+void ReorderAdArray(AdvertArray* adArr);
 
 void FreeAdverts(AdvertArray* adArr);

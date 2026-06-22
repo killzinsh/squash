@@ -40,8 +40,8 @@ void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, en
         totMes = Vector2Add(totMes, MeasureTextEx(GetFontByStyle(fStyle[i]), opt[i], TXT_MENU_SIZE, TXT_SPACING));
     }
     
-    totMes.x += PAD_MENU_X * (n-1);
-    totMes.y += PAD_MENU_Y * (n-1); 
+    totMes.x += (float)(PAD_MENU_X * (n-1));
+    totMes.y += (float)(PAD_MENU_Y * (n-1)); 
     
     if (rot == OPT_ROT_VERT)
     {
