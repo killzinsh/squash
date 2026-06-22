@@ -27,3 +27,13 @@ typedef struct Sprite {
     double animTime;
     TextureArray textures;
 } Sprite;
+
+typedef struct
+{
+    bool resetBall;
+    bool finished;
+    int bounces;
+    int curHits;
+    int curGame;
+    double resetStartTime;
+} Game;

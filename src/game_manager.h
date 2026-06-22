@@ -35,22 +35,11 @@
 #define MENU_TXT {"MATCH (2 - PLAYER)", "GYM (1 - PLAYER)", "EXIT GAME"}
 #define MENU_TXT_CNT 3
 
-typedef struct Game
-{
-    bool resetBall;
-    bool finished;
-    int bounces;
-    int curHits;
-    int curGame;
-    double resetStartTime;
-} Game;
-
 enum Scene {SCENE_MENU, SCENE_GAME, SCENE_GYM, SCENE_EXIT, SCENE_CNT};
 enum MenuOption {MENU_GAME, MENU_GYM, MENU_EXIT, MENU_CNT};
 enum GameOption {GAME_REPLAY, GAME_MENU, GAME_CNT};
 
 void CreateGame();
-Game InitGame();
 
 void SceneManager(enum Scene initScene);
 enum Scene MenuBrowser();

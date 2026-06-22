@@ -1,11 +1,15 @@
 #include "entity_manager.h"
 
-void InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr)
+Game InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr)
 {
     InitPlayer(p1, PLAYER_ONE, PLAYER1_CTRLS, PLAYER_HIT_COOLDOWN);
     InitPlayer(p2, PLAYER_TWO, PLAYER2_CTRLS, PLAYER_HIT_COOLDOWN);
     InitBall(ball);
     InitAdverts(adArr, MAX_ADVERT_CNT, AD_SPAWNTIME_COOLDOWN);
+
+    return (Game){.resetBall = true, .finished = false, 
+                 .bounces = 0, .curHits = 0, .curGame = 0,
+                 .resetStartTime = GetTime()};
 }
 
 void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Rectangle playArea)
@@ -66,8 +70,6 @@ void UpdatePlayerScore(Player* p1, Player* p2, int activePlayerIndex)
 
 bool IsBallHit(Player* activePlayer, Ball* ball)
 {
-
-
     bool colWithBall = CheckCollisionCircleRec(ball->obj.pos, BALL_R, activePlayer->obj.curHitbox);
     if (colWithBall && activePlayer->hit) 
     {

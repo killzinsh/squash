@@ -23,7 +23,7 @@
 #define MAX_ADVERT_CNT 5
 #define AD_SPAWNTIME_COOLDOWN 5.0f
 
-void InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr);
+Game InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr);
 void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Rectangle playArea);
 
 void UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea);

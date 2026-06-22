@@ -1,10 +1,5 @@
 #include "game_manager.h"
 
-static Player player1;
-static Player player2;
-static Ball ball;
-static AdvertArray adArr;
-
 void CreateGame()
 {
     InitWindow(WIDTH, HEIGHT, TITLE);    
@@ -18,16 +13,6 @@ void CreateGame()
 
     InitAudioAssets();
     InitRenderer();
-    InitEntities(&player1, &player2, &ball, &adArr);
-}
-
-Game InitGame()
-{
-    double initTime = GetTime();
-    Game game = {.resetBall = true, .finished = false, 
-                 .bounces = 0, .curHits = 0, .curGame = 0,
-                 .resetStartTime = initTime};
-    return game;
 }
 
 void SceneManager(enum Scene initScene)
@@ -94,8 +79,15 @@ enum Scene MenuBrowser()
 enum Scene MainGame()
 {
     Rectangle playArea = GetActivePlayArea();
-    Game game = InitGame();
+   
+    Player player1;
+    Player player2;
+    Ball ball;
+    AdvertArray adArr;
+
+    Game game = InitEntities(&player1, &player2, &ball, &adArr);
     ResetEntities(&player1, &player2, &ball, &adArr, playArea);
+
     int selection = 0;
 
     while (!WindowShouldClose())
@@ -118,6 +110,7 @@ enum Scene MainGame()
             
             else if (GetKeyPressed() == KEY_ENTER)
             {
+                CloseEntities(&adArr);
                 switch(selection)
                 {
                     case GAME_REPLAY:
@@ -188,7 +181,6 @@ enum Scene MainGame()
 
 void CloseGame()
 {
-    CloseEntities(&adArr);
     CloseAssets();
     CloseWindow();
 }
