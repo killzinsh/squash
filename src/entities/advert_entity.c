@@ -86,7 +86,7 @@ Advert* CreateAdvert(enum AdTypes adId, Rectangle adArea)
     ad->adType = adId;
     ad->obj.id = ENTITY_AD;
     ad->selected = false;
-    ad->adImage.textures = GetAdvertTexture(adId);
+    ad->adImage.textures = *GetAdvertTexture(adId);
     ad->adImage.active = GetRandomValue(0, ad->adImage.textures.cnt -1);
 
     Vector2 textureDimn = {.x = (float)ad->adImage.textures.textures[ad->adImage.active].width,
@@ -98,8 +98,8 @@ Advert* CreateAdvert(enum AdTypes adId, Rectangle adArea)
         return NULL;
     }
 
-    ad->obj.pos.x = (float)GetRandomValue((int)adArea.x, adArea.x + adArea.width - textureDimn.x);
-    ad->obj.pos.y = (float)GetRandomValue((int)adArea.y, adArea.y + adArea.height - textureDimn.y);
+    ad->obj.pos.x = (float)GetRandomValue((int)adArea.x, (int)(adArea.x + adArea.width - textureDimn.x));
+    ad->obj.pos.y = (float)GetRandomValue((int)adArea.y, (int)(adArea.y + adArea.height - textureDimn.y));
 
     ad->closeBox.active = 0;
     ad->closeBox.textures.textures = GetCloseButtonTexture();
@@ -122,16 +122,17 @@ void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
 
     for (int i = 0; i < adArr->adCnt; i++)
     {
-        Rectangle adHitbox = {adArr->ads[i]->adImage.textures.textures[adArr->ads[i]->closeBox.active].width + adArr->ads[i]->obj.pos.x - AD_CLOSE_HITBOX.x, 
-                              adArr->ads[i]->obj.pos.y, AD_CLOSE_HITBOX.x, AD_CLOSE_HITBOX.y}; 
+        Advert* curAd = adArr->ads[i];
+        Rectangle adHitbox = {(float)curAd->adImage.textures.textures[curAd->closeBox.active].width + curAd->obj.pos.x - AD_CLOSE_HITBOX.x, 
+                              curAd->obj.pos.y, AD_CLOSE_HITBOX.x, AD_CLOSE_HITBOX.y}; 
         if (CheckCollisionRecs(pHitbox, adHitbox)) 
         {
-            adArr->ads[i]->selected = true;
-            adArr->ads[i]->closeBox.active = AD_HOVER_OVER_HITBOX_TRUE;
+            curAd->selected = true;
+            curAd->closeBox.active = AD_HOVER_OVER_HITBOX_TRUE;
 
             if (isHit)
             {
-                adTypeCnt[adArr->ads[i]->adType]--;
+                adTypeCnt[curAd->adType]--;
 
                 free(adArr->ads[i]);
                 adArr->ads[i] = NULL;

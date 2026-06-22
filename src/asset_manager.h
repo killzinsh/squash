@@ -52,9 +52,9 @@ void InitFontAssets();
 void AssetsPlaySound(enum SoundType soundType);
 
 Font GetFontByStyle(enum FontStyle style);
-TextureArray GetBallTexture(enum EntityId ballId);
-TextureArray GetPlayerTexture(enum PlayerTypes playerType);
-TextureArray GetAdvertTexture(enum AdTypes adType);
+TextureArray* GetBallTexture(enum EntityId ballId);
+TextureArray* GetPlayerTexture(enum PlayerTypes playerType);
+TextureArray* GetAdvertTexture(enum AdTypes adType);
 Texture2D* GetBorderTexture();
 Texture2D* GetCloseButtonTexture();
 

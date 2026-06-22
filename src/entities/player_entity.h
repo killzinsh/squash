@@ -22,7 +22,7 @@ typedef struct
 {
     enum PlayerTypes playerType;
     bool hit;
-    unsigned score;
+    int score;
     double hitTime;
     double hitCooldown;
     Entity obj;

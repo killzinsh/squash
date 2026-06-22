@@ -120,37 +120,43 @@ Font GetFontByStyle(enum FontStyle style)
     }
 }
 
-TextureArray GetBallTexture(enum EntityId ballId)
+TextureArray* GetBallTexture(enum EntityId ballId)
 {
-    if (ballId == ENTITY_BALL) return ballTextures;
+    if (ballId == ENTITY_BALL) return &ballTextures;
+
+    fprintf(stderr, "[ERROR]: Could not get ball texture!\n");
+    return NULL;
 }
-TextureArray GetPlayerTexture(enum PlayerTypes playerType)
+
+TextureArray* GetPlayerTexture(enum PlayerTypes playerType)
 {
     switch (playerType)
     {
     case PLAYER_ONE:
-        return p1Textures;
+        return &p1Textures;
     case PLAYER_TWO:
-        return p2Textures;
+        return &p2Textures;
     default:
-        break;
+        fprintf(stderr, "[ERROR]: Could not get player texture!\n");
+        return NULL;
     }
 }
 
-TextureArray GetAdvertTexture(enum AdTypes adType)
+TextureArray* GetAdvertTexture(enum AdTypes adType)
 {
     switch (adType)
     {
     case AD_HOR:
-        return adTexturesHorBanner;
+        return &adTexturesHorBanner;
     case AD_VERT_LEFT:
-        return adTexturesVertBanner;
+        return &adTexturesVertBanner;
     case AD_VERT_RIGHT:
-        return adTexturesVertBanner;
+        return &adTexturesVertBanner;
     case AD_RECT:
-        return adTexturesRect;
+        return &adTexturesRect;
     default:
-        break;
+        fprintf(stderr, "[ERROR]: Could not get advert texture!\n");
+        return NULL;
     }
 }
 

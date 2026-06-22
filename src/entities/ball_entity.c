@@ -4,7 +4,7 @@ void InitBall(Ball* ball)
 {
     ball->obj.id = ENTITY_BALL;
     ball->sprite.active = 0;
-    ball->sprite.textures = GetBallTexture(ENTITY_BALL);
+    ball->sprite.textures = *GetBallTexture(ENTITY_BALL);
 }
 
 void ResetBall(Ball* ball, Vector2 pos, int minAng, int maxAng, float spd)

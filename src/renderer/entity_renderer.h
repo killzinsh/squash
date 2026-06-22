@@ -7,6 +7,7 @@
 #include "../entities/ball_entity.h"
 #include "../entities/advert_entity.h"
 
+
 #define SPRITE_PLAYER_NOHIT 0
 #define SPRITE_PLAYER_HIT 1
 #define SPRITE_PLAYER_W 177

@@ -7,7 +7,7 @@ void InitPlayer(Player* p, enum PlayerTypes idPlayer, ControlLayout ctrls, doubl
     p->ctrl = ctrls;
     p->score = 0;
     p->hitCooldown = cooldownTime;
-    p->sprite.textures = GetPlayerTexture(idPlayer);
+    p->sprite.textures = *GetPlayerTexture(idPlayer);
 }
 
 void ResetPlayer(Player* p, Vector2 pos, float spd, double curTime)
