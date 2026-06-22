@@ -7,6 +7,9 @@ TODO: ad cool close (round edges)
 
 TODO: gym mode
 
+BUGS: border calculates length starting from count in (DO NOT DO TAHT!)
+BUGS: player score does not reset after rematch
+
 CODE IMPROVE: seperate all render manager to overlay renderer
 CODE IMPROVE: game is also an entity (after gym mode implementation)
 CODE IMPROVE: make unified menu call

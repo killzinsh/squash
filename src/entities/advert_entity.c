@@ -1,23 +1,30 @@
 #include "advert_entity.h"
 
-static int horBanner = 0;
-static int vertBannerLeft = 0;
-static int vertBannerRight = 0;
-static int rectCnt = 0;
+static int adTypeCnt[AD_TYPE_CNT];
 
 void InitAdverts(AdvertArray* adArr, int maxCnt, double cooldownTime)
 {
     adArr->maxAdCnt = maxCnt;
     adArr->ads = malloc(sizeof(Advert*) * (size_t)maxCnt);
     adArr->adCnt = 0;
-    adArr->spawnTimeCooldown = cooldownTime;    
+    adArr->spawnTimeCooldown = cooldownTime;
+
+    for (int i = 0; i < AD_TYPE_CNT; i++)
+        adTypeCnt[i] = 0;
 }
 
 void ResetAdverts(AdvertArray* adArr, double curTime)
 {
     adArr->spawnTimer = curTime;
     for (int i = 0; i < adArr->adCnt; i++)
+    {
         free(adArr->ads[i]);
+        adArr->ads[i] = NULL;
+    }
+    adArr->adCnt = 0;
+ 
+    for (int i = 0; i < AD_TYPE_CNT; i++)
+        adTypeCnt[i] = 0;
 }
 
 bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
@@ -29,35 +36,31 @@ bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
     bool isSpawned = false;
     while (isSpawned == false)
     {
-        if (seed == AD_HOR && horBanner < AD_HOR_BANNER_CNT)
+        if (seed == AD_HOR && adTypeCnt[AD_HOR] < AD_HOR_BANNER_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_HOR, 
                     AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            horBanner++;
             isSpawned = true;
         }
 
-        else if (seed == AD_VERT_LEFT && vertBannerLeft < AD_VERT_LEFT_BANNER_CNT)
+        else if (seed == AD_VERT_LEFT && adTypeCnt[AD_VERT_LEFT] < AD_VERT_LEFT_BANNER_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_VERT_LEFT, 
                 AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            vertBannerLeft++;
             isSpawned = true;
         }
 
-        else if (seed == AD_VERT_RIGHT && vertBannerRight < AD_VERT_RIGHT_BANNER_CNT)
+        else if (seed == AD_VERT_RIGHT && adTypeCnt[AD_VERT_RIGHT] < AD_VERT_RIGHT_BANNER_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_VERT_RIGHT, 
                 AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            vertBannerRight++;
             isSpawned = true;
         }
 
-        else if (seed == AD_RECT && rectCnt < AD_RECT_CNT)
+        else if (seed == AD_RECT && adTypeCnt[AD_RECT] < AD_RECT_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_RECT, 
                 AD_RECT_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            rectCnt++;
             isSpawned = true;
         }
 
@@ -66,6 +69,7 @@ bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
 
     if (adArr->ads[adArr->adCnt] == NULL) return false;
 
+    adTypeCnt[seed]++;
     adArr->adCnt++;
     return true;
 }
@@ -127,23 +131,7 @@ void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
 
             if (isHit)
             {
-                switch (adArr->ads[i]->adType)
-                {
-                case AD_HOR:
-                    horBanner--;
-                    break;
-                case AD_VERT_LEFT:
-                    vertBannerLeft--;
-                    break;
-                case AD_VERT_RIGHT:
-                    vertBannerRight--;
-                    break;
-                case AD_RECT:
-                    rectCnt--;
-                    break;
-                default:
-                    break;
-                }
+                adTypeCnt[adArr->ads[i]->adType]--;
 
                 free(adArr->ads[i]);
                 adArr->ads[i] = NULL;
