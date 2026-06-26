@@ -13,8 +13,8 @@ void RenderCountIn(float resetTime, Vector2 screen)
 
 void RenderScore(int p1Score, int p2Score, int curHits)
 {
-    char scrollBuff[TXT_BUFF_EXT];
-    snprintf(scrollBuff, TXT_BUFF_EXT, "BEST OF 5 GAMES - PURPLE RACKET SCORE: %d - GREEN RACKET SCORE: %d - CURRENT RALLY: %03d - ", 
+    char scrollBuff[TXT_BUFF];
+    snprintf(scrollBuff, TXT_BUFF, "BEST OF 5 GAMES - PURPLE RACKET SCORE: %d - GREEN RACKET SCORE: %d - CURRENT RALLY: %03d - ", 
             p1Score, p2Score, curHits);
         RenderScrollingText(scrollBuff, 0);
 }

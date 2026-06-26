@@ -24,11 +24,11 @@
 #define AD_SPAWNTIME_COOLDOWN 5.0f
 
 Game InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr);
-void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Rectangle playArea);
+void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Game* game, Rectangle playArea);
 
 void UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea);
 void UpgradeEntityStats(Player* p1, Player* p2, Ball* ball, float playerSpeedIncrease, float ballSpeedIncrease);
-void UpdatePlayerScore(Player* p1, Player* p2, int activePlayerIndex);
+void UpdateScore(Player* p1, Player* p2, int activePlayerIndex, Game* game);
 
 bool IsBallHit(Player* activePlayer, Ball* ball);
 

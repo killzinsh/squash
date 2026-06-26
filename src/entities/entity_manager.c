@@ -12,13 +12,18 @@ Game InitEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr)
                  .resetStartTime = GetTime()};
 }
 
-void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Rectangle playArea)
+void ResetEntities(Player* p1, Player* p2, Ball* ball, AdvertArray* adArr, Game* game, Rectangle playArea)
 {
     double curTime = GetTime();
     ResetPlayer(p1, PLAYER1_POS(playArea.width, playArea.height, playArea.y), PLAYER_INIT_SPEED, curTime);
     ResetPlayer(p2, PLAYER2_POS(playArea.width, playArea.height, playArea.y), PLAYER_INIT_SPEED, curTime);
     ResetBall(ball, BALL_POS(playArea.width, playArea.height, playArea.y), INIT_ANGLE_MIN, INIT_ANGLE_MAX, BALL_INIT_SPEED);
     ResetAdverts(adArr, curTime);
+
+    game->curHits = 0;
+    game->bounces = 0;
+    game->resetBall = true;
+    game->resetStartTime = curTime;
 }
 
 void UpdateEntities(Player* p1, Player* p2, int activePlayerIndex, Ball* ball, AdvertArray* adArr, Rectangle playArea)
@@ -59,13 +64,14 @@ void UpgradeEntityStats(Player* p1, Player* p2, Ball* ball, float playerSpeedInc
     UpgradeBall(ball, ballSpeedIncrease);
 }
 
-void UpdatePlayerScore(Player* p1, Player* p2, int activePlayerIndex)
+void UpdateScore(Player* p1, Player* p2, int activePlayerIndex, Game* game)
 {
     Player* activePlayer;
     if (activePlayerIndex == 0) activePlayer = p1;
     else activePlayer = p2;
 
     activePlayer->score++;
+    game->curGame++;
 }
 
 bool IsBallHit(Player* activePlayer, Ball* ball)

@@ -34,8 +34,15 @@
 
 #define WALL_SOUNDS {"assets/sounds/wall01.wav", "assets/sounds/wall02.wav", "assets/sounds/wall03.wav"}
 #define WALL_SOUNDS_CNT 3
+
 #define RACKETHIT_SOUNDS {"assets/sounds/racket01.wav", "assets/sounds/racket02.wav", "assets/sounds/racket03.wav"}
 #define RACKETHIT_SOUNDS_CNT 3
+
+#define BEEP_SOUND {"assets/sounds/beep04.wav"};
+#define BEEP_SOUND_CNT 1
+
+#define SELECT_SOUND {"assets/sounds/select01.wav"};
+#define SELECT_SOUND_CNT 1
 
 #define FONT_PATHS {"assets/fonts/AvenirRegular.ttf", "assets/fonts/AvenirBlack.ttf", "assets/fonts/AvenirBlackItalic.ttf"}
 #define FONT_LOAD_SIZE 240
@@ -43,7 +50,7 @@
 #define BORDER_FILE "assets/overlays/border.png"
 
 enum FontStyle {FONT_REG, FONT_BOLD, FONT_BOLD_ITALIC, FONT_STYLE_CNT};
-enum SoundType {SFX_WALL, SFX_RACKET, SFX_CNT};
+enum SoundType {SFX_WALL, SFX_RACKET, SFX_BEEP, SFX_SELECT, SFX_CNT};
 
 void InitAudioAssets();
 void InitTextureAssets();

@@ -5,8 +5,7 @@
 #include "../asset_manager.h"
 
 #define TXT_SPACING 0
-#define TXT_BUFF (31+1)
-#define TXT_BUFF_EXT (1023+1)
+#define TXT_BUFF (1023+1)
 
 #define TXT_MENU_SIZE 60
 #define TXT_COUNTDOWN_SIZE 2000
@@ -22,6 +21,6 @@ enum MenuRotation {OPT_ROT_VERT, OPT_ROT_HOR};
 int GetScrollingTextHeight(const char* str, float size);
 
 void RenderScrollingText(const char* str, float yPos);
-void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, enum MenuRotation rot);
+void RenderOptionMenu(int select, Vector2 pos, char** opt, const int n, enum MenuRotation rot);
 void RenderText(const char* str, Vector2 pos, float size, enum FontStyle style, 
                 enum FontCentering hor, enum FontCentering vert, Color col);

@@ -13,7 +13,7 @@ void InitRenderer()
 
 Rectangle GetActivePlayArea() { return activePlayArea; }
 
-void RenderMenu(int select, const char** opt, int n)
+void RenderStartMenu(int select, int n, char* opt[n])
 {
     BeginDrawing();
     {
@@ -53,20 +53,13 @@ void RenderGame(Player* p1, Player* p2, Ball* ball, AdvertArray* ads, int curHit
     EndDrawing();
 }
 
-void RenderGameEnd(Player* p1, Player* p2, int curHits, int select, const char** opt, int n)
+void RenderGameEnd(char* winTxt, int select, int n, char* opt[n])
 {
     BeginDrawing();
     {
         ClearBackground(WHITE);
-        RenderPlayers(p1, p2);
-
-        char winBuff[TXT_BUFF];
-        if (p1->score > p2->score) snprintf(winBuff, TXT_BUFF, "PLAYER %d WON!", 1);
-        else snprintf(winBuff, TXT_BUFF, "PLAYER %d WON!", 2);
-            
-        RenderText(winBuff, Vector2Scale(SCREEN, 0.5), TXT_WIN_SIZE, FONT_BOLD, FONT_CENTER, FONT_MID, BLUE);
+        RenderText(winTxt, Vector2Scale(SCREEN, 0.5), TXT_WIN_SIZE, FONT_BOLD, FONT_CENTER, FONT_MID, BLUE);
         RenderOptionMenu(select, (Vector2){WIDTH/2, HEIGHT/2 + TXT_WIN_PAD}, opt, n, OPT_ROT_HOR);
-        RenderScore(p1->score, p2->score, curHits);
     }
     EndDrawing();
 }

@@ -1,5 +1,10 @@
 #include "game_manager.h"
 
+static MenuOptions startMenu;
+static MenuOptions endMenu;
+static int selection;
+
+
 void CreateGame()
 {
     InitWindow(WIDTH, HEIGHT, TITLE);    
@@ -13,6 +18,21 @@ void CreateGame()
 
     InitAudioAssets();
     InitRenderer();
+
+    startMenu.optionCnt = START_MENU_CNT;
+    const char* startMenuTxt[START_MENU_CNT] = START_MENU_TXT;
+    int startMenuScenes[START_MENU_CNT] = START_MENU_SCENES;
+    for (int i = 0; i < START_MENU_CNT; i++)
+    {
+        startMenu.optionTxt[i] = startMenuTxt[i];
+        startMenu.scenes[i] = startMenuScenes[i];
+    }
+
+    endMenu.optionCnt = END_MENU_CNT;
+    endMenu.optionTxt[0] = "REPLAY";
+    endMenu.scenes[0] = SCENE_GAME;
+    endMenu.optionTxt[1] = "MAIN MENU";
+    endMenu.scenes[1] = SCENE_MENU;
 }
 
 void SceneManager(enum Scene initScene)
@@ -27,9 +47,16 @@ void SceneManager(enum Scene initScene)
                 curScene = MainGame();
                 break;
             case SCENE_MENU:
-                curScene = MenuBrowser();
+                curScene = StartMenu();
                 break;
             case SCENE_GYM:
+                return;
+                break;
+            case SCENE_P1_WON:
+                curScene = GameOver(PLAYER_ONE);
+                break;
+            case SCENE_P2_WON:
+                curScene = GameOver(PLAYER_TWO);
                 break;
             case SCENE_EXIT:
                 return;
@@ -40,39 +67,59 @@ void SceneManager(enum Scene initScene)
     }
 }
 
-enum Scene MenuBrowser()
+enum Scene MenuBrowser(MenuOptions menu)
 {
-    int select = 0;
-    
-    while (!WindowShouldClose())
+    if (IsKeyPressed(KEY_DOWN))
     {
-        if (IsKeyPressed(KEY_DOWN))
-        {
-            select++;
-            select %= MENU_CNT;
-        }
-        
-        else if (IsKeyPressed(KEY_UP))
-        {
-            if (select <= 0) select = MENU_CNT-1;
-            else select--;
-        }
-        
-        else if (GetKeyPressed() == KEY_ENTER)
-        {
-            switch(select)
-            {
-                case MENU_GAME:
-                    return SCENE_GAME;
-                case MENU_EXIT:
-                    return SCENE_EXIT;
-            }
-        }
-        
-        const char* tmpTxt[] = MENU_TXT; 
-        RenderMenu(select, tmpTxt, MENU_TXT_CNT);
+        AssetsPlaySound(SFX_BEEP);
+        selection++;
+        selection %= menu.optionCnt;
     }
     
+    else if (IsKeyPressed(KEY_UP))
+    {
+        AssetsPlaySound(SFX_BEEP);
+        if (selection <= 0) selection = menu.optionCnt-1;
+        else selection--;
+    }
+    
+    else if (GetKeyPressed() == KEY_ENTER)
+    {
+        AssetsPlaySound(SFX_SELECT);
+        return menu.scenes[selection];
+    }
+    
+    return SCENE_NOCHANGE;
+}
+
+enum Scene StartMenu()
+{
+    selection = 0;
+    while(!WindowShouldClose())
+    {
+        enum Scene returnScene = MenuBrowser(startMenu);
+        if (returnScene != SCENE_NOCHANGE) return returnScene;
+        RenderStartMenu(selection, startMenu.optionCnt, startMenu.optionTxt);   
+    }
+
+    return SCENE_EXIT;
+}
+
+enum Scene GameOver(enum PlayerTypes winner)
+{
+    selection = 0;
+    while (!WindowShouldClose())
+    {
+        enum Scene returnScene = MenuBrowser(endMenu);
+        if (returnScene != SCENE_NOCHANGE) return returnScene;
+
+        char buff[TXT_BUFF];
+        if (winner == PLAYER_ONE) strcpy(buff, "GREEN RACKET WINS!");
+        else strcpy(buff, "PURPLE RACKET WINS!");
+
+        RenderGameEnd(buff, selection, endMenu.optionCnt, endMenu.optionTxt);
+    }
+
     return SCENE_EXIT;
 }
 
@@ -86,42 +133,13 @@ enum Scene MainGame()
     AdvertArray adArr;
 
     Game game = InitEntities(&player1, &player2, &ball, &adArr);
-    ResetEntities(&player1, &player2, &ball, &adArr, playArea);
+    ResetEntities(&player1, &player2, &ball, &adArr, &game, playArea);
 
-    int selection = 0;
-
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && game.finished == false)
     {
         double curTime = GetTime();
-        
-        if (game.finished)
-        {
-            if (IsKeyPressed(KEY_RIGHT))
-            {
-                selection++;
-                selection %= GAME_CNT;
-            }
-            
-            else if (IsKeyPressed(KEY_LEFT))
-            {
-                if (selection <= 0) selection = GAME_CNT-1;
-                else selection--;
-            }
-            
-            else if (GetKeyPressed() == KEY_ENTER)
-            {
-                CloseEntities(&adArr);
-                switch(selection)
-                {
-                    case GAME_REPLAY:
-                        return SCENE_GAME;
-                    case GAME_MENU:
-                        return SCENE_MENU;
-                }
-            }
-        }
        
-        else if (game.resetBall && curTime - game.resetStartTime > RESET_TIME)
+        if (game.resetBall && curTime - game.resetStartTime > RESET_TIME)
         {
             ResetBorderAnimation(BallFrameCnt(&ball, playArea, BALL_BOUNCE_CNT));
             adArr.spawnTimer = GetTime();
@@ -157,24 +175,21 @@ enum Scene MainGame()
 
             if (game.bounces > BALL_BOUNCE_CNT) 
             {   
-                UpdatePlayerScore(&player1, &player2, activePlayer);
-                ResetEntities(&player1, &player2, &ball, &adArr, playArea);
-                
-                game.curGame++;
-                game.curHits = 0;
-                game.bounces = 0;
-                game.resetBall = true;
-                game.resetStartTime = curTime;
-                
+                UpdateScore(&player1, &player2, activePlayer, &game);
+                ResetEntities(&player1, &player2, &ball, &adArr, &game, playArea);
+                                
                 if (player1.score == WINNING_SCORE || player2.score == WINNING_SCORE) game.finished = true;
             }
         }
-
-        const char* tmpTxt[] = GAME_TXT;        
-        if (game.finished) RenderGameEnd(&player1, &player2, game.curHits, selection, tmpTxt, GAME_TXT_CNT);
-        else if (game.resetBall) RenderGameStart(&player1, &player2, (float)game.resetStartTime, game.curHits);
+       
+        if (game.resetBall) RenderGameStart(&player1, &player2, (float)game.resetStartTime, game.curHits);
         else RenderGame(&player1, &player2, &ball, &adArr, game.curHits);
     }
+
+    CloseEntities(&adArr);
+
+    if (player1.score == WINNING_SCORE) return SCENE_P1_WON;
+    else if (player2.score == WINNING_SCORE) return SCENE_P2_WON;
 
     return SCENE_EXIT;
 }

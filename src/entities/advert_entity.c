@@ -33,35 +33,34 @@ bool SpawnAdvert(AdvertArray* adArr, Rectangle playArea)
 
     int seed = GetRandomValue(0, AD_TYPE_CNT-1);
     
-    bool isSpawned = false;
-    while (isSpawned == false)
+    while (true)
     {
         if (seed == AD_HOR && adTypeCnt[AD_HOR] < AD_HOR_BANNER_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_HOR, 
                     AD_HOR_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            isSpawned = true;
+            break;
         }
 
         else if (seed == AD_VERT_LEFT && adTypeCnt[AD_VERT_LEFT] < AD_VERT_LEFT_BANNER_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_VERT_LEFT, 
                 AD_VERT_LEFT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            isSpawned = true;
+            break;
         }
 
         else if (seed == AD_VERT_RIGHT && adTypeCnt[AD_VERT_RIGHT] < AD_VERT_RIGHT_BANNER_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_VERT_RIGHT, 
                 AD_VERT_RIGHT_BANNER_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            isSpawned = true;
+            break;
         }
 
         else if (seed == AD_RECT && adTypeCnt[AD_RECT] < AD_RECT_CNT)
         {
             adArr->ads[adArr->adCnt] = CreateAdvert(AD_RECT, 
                 AD_RECT_AREA(playArea.x, playArea.y, playArea.width, playArea.height));
-            isSpawned = true;
+            break;
         }
 
         seed = (seed+1)%AD_TYPE_CNT;

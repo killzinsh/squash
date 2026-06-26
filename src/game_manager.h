@@ -29,20 +29,32 @@
 #define RESET_TIME 2.0f
 #define WINNING_SCORE 3
 
-#define GAME_TXT {"REPLAY", "MENU"}
-#define GAME_TXT_CNT 2
+enum Scene {SCENE_MENU, SCENE_GYM, SCENE_GAME, SCENE_P1_WON, SCENE_P2_WON, SCENE_EXIT, SCENE_CNT, SCENE_NOCHANGE};
 
-#define MENU_TXT {"MATCH (2 - PLAYER)", "GYM (1 - PLAYER)", "EXIT GAME"}
-#define MENU_TXT_CNT 3
+#define END_MENU_TXT {"REPLAY", "MENU"}
+#define END_MENU_SCENES {SCENE_GAME, SCENE_MENU}
+#define END_MENU_CNT 2
 
-enum Scene {SCENE_MENU, SCENE_GAME, SCENE_GYM, SCENE_EXIT, SCENE_CNT};
-enum MenuOption {MENU_GAME, MENU_GYM, MENU_EXIT, MENU_CNT};
-enum GameOption {GAME_REPLAY, GAME_MENU, GAME_CNT};
+#define START_MENU_TXT {"MATCH (2 - PLAYER)", "GYM (1 - PLAYER)", "EXIT GAME"}
+#define START_MENU_SCENES {SCENE_GAME, SCENE_GYM, SCENE_EXIT}
+#define START_MENU_CNT 3
+
+#define MAX_MENU_OPTION_CNT 3
+
+typedef struct 
+{
+    int optionCnt;
+    char* optionTxt[MAX_MENU_OPTION_CNT];
+    enum Scene scenes[MAX_MENU_OPTION_CNT];
+} MenuOptions;
 
 void CreateGame();
 
 void SceneManager(enum Scene initScene);
-enum Scene MenuBrowser();
+
+enum Scene MenuBrowser(MenuOptions menu);
+enum Scene StartMenu();
+enum Scene GameOver();
 enum Scene MainGame();
 
 void CloseGame();

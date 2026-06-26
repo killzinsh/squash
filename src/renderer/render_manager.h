@@ -19,7 +19,7 @@
 void InitRenderer();
 Rectangle GetActivePlayArea();
 
-void RenderMenu(int select, const char** opt, int n);
+void RenderStartMenu(int select, int n, char* opt[n]);
 void RenderGameStart(Player* p1, Player* p2, float resetTime, int curHits);
 void RenderGame(Player* p1, Player* p2, Ball* ball, AdvertArray* ads, int curHits);
-void RenderGameEnd(Player* p1, Player* p2, int curHits, int select, const char** opt, int n);
+void RenderGameEnd(char* winTxt, int select, int n, char* opt[n]);

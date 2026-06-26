@@ -23,7 +23,7 @@ void RenderScrollingText(const char* str, float yPos)
     firstPos -= TXT_SCROLL_VEL;
 }
 
-void RenderOptionMenu(int select, Vector2 pos, const char** opt, const int n, enum MenuRotation rot)
+void RenderOptionMenu(int select, Vector2 pos, char** opt, const int n, enum MenuRotation rot)
 {
     Color txtColor[n];
     for (int i = 0; i < n; i++) txtColor[i] = BLACK;
