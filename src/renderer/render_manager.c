@@ -23,7 +23,7 @@ void RenderStartMenu(int select, int n, char* opt[n])
     EndDrawing();
 }
 
-void RenderGameStart(Player* p1, Player* p2, float resetTime, int curHits)
+void RenderGameStart(Player* p1, Player* p2, float resetTime, int curHits, int maxScore)
 {
     BeginDrawing();
     {
@@ -32,12 +32,12 @@ void RenderGameStart(Player* p1, Player* p2, float resetTime, int curHits)
         
         RenderPlayers(p1, p2);
 
-        RenderScore(p1->score, p2->score, curHits);
+        RenderScore(p1->score, p2->score, curHits, maxScore);
     }
     EndDrawing();
 }
 
-void RenderGame(Player* p1, Player* p2, Ball* ball, AdvertArray* ads, int curHits)
+void RenderGame(Player* p1, Player* p2, Ball* ball, AdvertArray* ads, int curHits, int maxScore)
 {
     BeginDrawing();
     {
@@ -47,7 +47,7 @@ void RenderGame(Player* p1, Player* p2, Ball* ball, AdvertArray* ads, int curHit
         RenderPlayers(p1, p2);
         RenderAds(ads);
         
-        RenderScore(p1->score, p2->score, curHits);
+        RenderScore(p1->score, p2->score, curHits, maxScore);
         RenderBorder(activePlayArea);
     }
     EndDrawing();

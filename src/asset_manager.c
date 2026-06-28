@@ -12,8 +12,9 @@ static Texture2D border;
 
 static Sound wallSfx[WALL_SOUNDS_CNT];
 static Sound racketHitSfx[WALL_SOUNDS_CNT];
-static Sound beepSfx[BEEP_SOUND_CNT];
-static Sound selectSfx[SELECT_SOUND_CNT];
+static Sound beepSfx;
+static Sound selectSfx;
+static Sound closeAdSfx;
 
 static Font fonts[FONT_STYLE_CNT];
 
@@ -34,17 +35,9 @@ void InitAudioAssets()
         racketHitSfx[i] = LoadSound(racketHitSfxFiles[i]);
     }
 
-    const char* beepSfxFiles[] = BEEP_SOUND;
-    for (int i = 0; i < BEEP_SOUND_CNT; i++)
-    {
-        beepSfx[i] = LoadSound(beepSfxFiles[i]);
-    }
-    
-    const char* selectSfxFiles[] = SELECT_SOUND;
-    for (int i = 0; i < SELECT_SOUND_CNT; i++)
-    {
-        selectSfx[i] = LoadSound(selectSfxFiles[i]);
-    }
+    beepSfx = LoadSound(BEEP_SOUND);
+    selectSfx = LoadSound(SELECT_SOUND);
+    closeAdSfx = LoadSound(CLOSE_AD_SOUND);
 }
 
 void InitTextureAssets()
@@ -113,11 +106,14 @@ void AssetsPlaySound(enum SoundType soundType)
         case SFX_RACKET:
             PlaySound(racketHitSfx[GetRandomValue(0, RACKETHIT_SOUNDS_CNT-1)]);
             break;
+        case SFX_CLOSE_AD:
+            PlaySound(closeAdSfx);
+            break;
         case SFX_BEEP:
-            PlaySound(beepSfx[0]);
+            PlaySound(beepSfx);
             break;
         case SFX_SELECT:
-            PlaySound(selectSfx[0]);
+            PlaySound(selectSfx);
             break;
         default:
             printf("Sound type unrecognized!\n");
@@ -190,8 +186,9 @@ void CloseAssets()
     for (int i = 0; i < RACKETHIT_SOUNDS_CNT; i++)
         if(IsSoundValid(racketHitSfx[i])) UnloadSound(racketHitSfx[i]);
     
-    if (IsSoundValid(beepSfx[0])) UnloadSound(beepSfx[0]);
-    if (IsSoundValid(selectSfx[0])) UnloadSound(selectSfx[0]);
+    if (IsSoundValid(beepSfx)) UnloadSound(beepSfx);
+    if (IsSoundValid(selectSfx)) UnloadSound(selectSfx);
+    if (IsSoundValid(closeAdSfx)) UnloadSound(closeAdSfx);
 
     for (int i = 0; i < FONT_STYLE_CNT; i++)
         if (IsFontValid(fonts[i])) UnloadFont(fonts[i]);

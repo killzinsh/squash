@@ -27,7 +27,7 @@
 #define SPEED_MAX_INCREASE 4
 
 #define RESET_TIME 2.0f
-#define WINNING_SCORE 3
+#define WINNING_SCORE 30
 
 enum Scene {SCENE_MENU, SCENE_GYM, SCENE_GAME, SCENE_P1_WON, SCENE_P2_WON, SCENE_EXIT, SCENE_CNT, SCENE_NOCHANGE};
 
@@ -52,7 +52,7 @@ void CreateGame();
 
 void SceneManager(enum Scene initScene);
 
-enum Scene MenuBrowser(MenuOptions menu);
+enum Scene MenuBrowser(MenuOptions menu, ControlLayout keys);
 enum Scene StartMenu();
 enum Scene GameOver();
 enum Scene MainGame();

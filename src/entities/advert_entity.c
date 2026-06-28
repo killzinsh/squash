@@ -131,6 +131,7 @@ void AdvertPlayerCollision(AdvertArray* adArr, Rectangle pHitbox, bool isHit)
 
             if (isHit)
             {
+                AssetsPlaySound(SFX_CLOSE_AD);
                 adTypeCnt[curAd->adType]--;
 
                 free(adArr->ads[i]);

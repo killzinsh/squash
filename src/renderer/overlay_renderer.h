@@ -11,7 +11,7 @@
 
 void RenderCountIn(float resetTime, Vector2 screen);
 
-void RenderScore(int p1Score, int p2Score, int curHits);
+void RenderScore(int p1Score, int p2Score, int curHits, int maxScore);
 
 void RenderBorder(Rectangle playArea);
 void ResetBorderAnimation(int frameLen);

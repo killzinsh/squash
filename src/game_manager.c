@@ -4,7 +4,6 @@ static MenuOptions startMenu;
 static MenuOptions endMenu;
 static int selection;
 
-
 void CreateGame()
 {
     InitWindow(WIDTH, HEIGHT, TITLE);    
@@ -20,7 +19,7 @@ void CreateGame()
     InitRenderer();
 
     startMenu.optionCnt = START_MENU_CNT;
-    const char* startMenuTxt[START_MENU_CNT] = START_MENU_TXT;
+    char* startMenuTxt[START_MENU_CNT] = START_MENU_TXT;
     int startMenuScenes[START_MENU_CNT] = START_MENU_SCENES;
     for (int i = 0; i < START_MENU_CNT; i++)
     {
@@ -67,16 +66,16 @@ void SceneManager(enum Scene initScene)
     }
 }
 
-enum Scene MenuBrowser(MenuOptions menu)
+enum Scene MenuBrowser(MenuOptions menu, ControlLayout keys)
 {
-    if (IsKeyPressed(KEY_DOWN))
+    if (IsKeyPressed(keys.next))
     {
         AssetsPlaySound(SFX_BEEP);
         selection++;
         selection %= menu.optionCnt;
     }
     
-    else if (IsKeyPressed(KEY_UP))
+    else if (IsKeyPressed(keys.prev))
     {
         AssetsPlaySound(SFX_BEEP);
         if (selection <= 0) selection = menu.optionCnt-1;
@@ -97,7 +96,7 @@ enum Scene StartMenu()
     selection = 0;
     while(!WindowShouldClose())
     {
-        enum Scene returnScene = MenuBrowser(startMenu);
+        enum Scene returnScene = MenuBrowser(startMenu, (ControlLayout){.next = KEY_DOWN, .prev = KEY_UP});
         if (returnScene != SCENE_NOCHANGE) return returnScene;
         RenderStartMenu(selection, startMenu.optionCnt, startMenu.optionTxt);   
     }
@@ -110,13 +109,12 @@ enum Scene GameOver(enum PlayerTypes winner)
     selection = 0;
     while (!WindowShouldClose())
     {
-        enum Scene returnScene = MenuBrowser(endMenu);
+        enum Scene returnScene = MenuBrowser(endMenu, (ControlLayout){.next = KEY_RIGHT, .prev = KEY_LEFT});
         if (returnScene != SCENE_NOCHANGE) return returnScene;
 
         char buff[TXT_BUFF];
-        if (winner == PLAYER_ONE) strcpy(buff, "GREEN RACKET WINS!");
-        else strcpy(buff, "PURPLE RACKET WINS!");
-
+        if (winner == PLAYER_ONE) strcpy(buff, "PURPLE RACKET WINS!");
+        else strcpy(buff, "GREEN RACKET WINS!");
         RenderGameEnd(buff, selection, endMenu.optionCnt, endMenu.optionTxt);
     }
 
@@ -151,6 +149,9 @@ enum Scene MainGame()
             int activePlayer = (game.curHits+game.curGame)%2;
             UpdateEntities(&player1, &player2, activePlayer, &ball, &adArr, playArea);
 
+            if (ball.hitType != COL_NOHIT && 
+                ball.hitType != COL_PLAYER_HIT) game.bounces++;
+
             if (ball.hitType == COL_PLAYER_HIT)
             { 
                 game.curHits++;
@@ -162,15 +163,7 @@ enum Scene MainGame()
                     UpgradeEntityStats(&player1, &player2, &ball, SPEED_PLAYER_INCREASE, SPEED_BALL_INCREASE);
                 }
                 
-                AssetsPlaySound(SFX_RACKET);
                 ResetBorderAnimation(BallFrameCnt(&ball, playArea, BALL_BOUNCE_CNT));
-            }
-
-            if (ball.hitType != COL_NOHIT)
-            {
-                game.bounces++;
-                if (ball.hitType != COL_PLAYER_HIT)
-                    AssetsPlaySound(SFX_WALL);
             }
 
             if (game.bounces > BALL_BOUNCE_CNT) 
@@ -178,19 +171,18 @@ enum Scene MainGame()
                 UpdateScore(&player1, &player2, activePlayer, &game);
                 ResetEntities(&player1, &player2, &ball, &adArr, &game, playArea);
                                 
-                if (player1.score == WINNING_SCORE || player2.score == WINNING_SCORE) game.finished = true;
+                if (player1.score >= WINNING_SCORE || player2.score >= WINNING_SCORE) game.finished = true;
             }
         }
        
-        if (game.resetBall) RenderGameStart(&player1, &player2, (float)game.resetStartTime, game.curHits);
-        else RenderGame(&player1, &player2, &ball, &adArr, game.curHits);
+        if (game.resetBall) RenderGameStart(&player1, &player2, (float)game.resetStartTime, game.curHits, WINNING_SCORE);
+        else RenderGame(&player1, &player2, &ball, &adArr, game.curHits, WINNING_SCORE);
     }
 
     CloseEntities(&adArr);
 
-    if (player1.score == WINNING_SCORE) return SCENE_P1_WON;
-    else if (player2.score == WINNING_SCORE) return SCENE_P2_WON;
-
+    if (player1.score >= WINNING_SCORE) return SCENE_P1_WON;
+    else if (player2.score >= WINNING_SCORE) return SCENE_P2_WON;   
     return SCENE_EXIT;
 }
 

@@ -70,7 +70,7 @@ void UpdateScore(Player* p1, Player* p2, int activePlayerIndex, Game* game)
     if (activePlayerIndex == 0) activePlayer = p1;
     else activePlayer = p2;
 
-    activePlayer->score++;
+    activePlayer->score += game->curHits;
     game->curGame++;
 }
 
@@ -80,6 +80,8 @@ bool IsBallHit(Player* activePlayer, Ball* ball)
     if (colWithBall && activePlayer->hit) 
     {
         ball->hitType = COL_PLAYER_HIT;
+        AssetsPlaySound(SFX_RACKET);
+
         return true;
     }
     return false;

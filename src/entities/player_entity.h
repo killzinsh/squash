@@ -10,14 +10,6 @@
 #define PLAYER_HITBOX_H 170
 #define PLAYER_HITBOX (Vector2){PLAYER_HITBOX_W, PLAYER_HITBOX_H}
 
-typedef struct {
-    KeyboardKey left;
-    KeyboardKey right;
-    KeyboardKey up;
-    KeyboardKey down;
-    KeyboardKey hit;
-} ControlLayout;
-
 typedef struct
 {
     enum PlayerTypes playerType;

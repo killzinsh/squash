@@ -11,11 +11,11 @@ void RenderCountIn(float resetTime, Vector2 screen)
     RenderText(countdownStr, Vector2Scale(screen, 0.5), TXT_COUNTDOWN_SIZE, FONT_REG, FONT_CENTER, FONT_MID, BLUE);
 }
 
-void RenderScore(int p1Score, int p2Score, int curHits)
+void RenderScore(int p1Score, int p2Score, int curHits, int maxScore)
 {
     char scrollBuff[TXT_BUFF];
-    snprintf(scrollBuff, TXT_BUFF, "BEST OF 5 GAMES - PURPLE RACKET SCORE: %d - GREEN RACKET SCORE: %d - CURRENT RALLY: %03d - ", 
-            p1Score, p2Score, curHits);
+    snprintf(scrollBuff, TXT_BUFF, "FIRST TO %02d - PURPLE RACKET SCORE: %02d - GREEN RACKET SCORE: %02d - CURRENT RALLY: %02d - ", 
+            maxScore, p1Score, p2Score, curHits);
         RenderScrollingText(scrollBuff, 0);
 }
 

@@ -78,15 +78,17 @@ Vector2 GetBallCollisionAgainstPlayArea(Vector2 futurePos, Rectangle playArea)
 }
 
 enum BallCollisionType GetCollisionAgainstWallType(Vector2 futurePos, Rectangle playArea)
-{   
+{
+    enum BallCollisionType colType = COL_NOHIT;   
     if (futurePos.y < playArea.y + BALL_R)
-        return COL_UHIT;
+        colType = COL_UHIT;
     else if (futurePos.y > playArea.y + playArea.height - BALL_R)
-        return COL_DHIT;
+        colType = COL_DHIT;
     else if (futurePos.x < playArea.x + BALL_R)
-        return COL_LHIT;
+        colType = COL_LHIT;
     else if (futurePos.x > playArea.x + playArea.width - BALL_R)
-        return COL_RHIT;
+        colType = COL_RHIT;
     
-    return COL_NOHIT;
+    if (colType != COL_NOHIT) AssetsPlaySound(SFX_WALL);
+    return colType;
 } 

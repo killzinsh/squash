@@ -28,6 +28,16 @@ typedef struct Sprite {
     TextureArray textures;
 } Sprite;
 
+typedef struct {
+    KeyboardKey left;
+    KeyboardKey right;
+    KeyboardKey up;
+    KeyboardKey down;
+    KeyboardKey hit;
+    KeyboardKey next;
+    KeyboardKey prev;
+} ControlLayout;
+
 typedef struct
 {
     bool resetBall;

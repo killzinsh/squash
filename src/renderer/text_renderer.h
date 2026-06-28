@@ -15,6 +15,9 @@
 #define TXT_SCROLL_SIZE 35
 #define TXT_SCROLL_VEL 3
 
+#define PAD_MENU_Y 5
+#define PAD_MENU_X 5
+
 enum FontCentering {FONT_LEFT, FONT_CENTER, FONT_RIGHT, FONT_TOP, FONT_MID, FONT_BOT};
 enum MenuRotation {OPT_ROT_VERT, OPT_ROT_HOR};
 

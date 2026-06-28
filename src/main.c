@@ -1,8 +1,6 @@
 /*
 TODO: add menu music loop
-CODE IMPROVE: make unified menu call
 TODO: swoosh skana raketei (un tad hitam butu janogaida bisku)
-TODO: ad closing sfx
 
 TODO: slow menu option fade, fade in main game
 TODO: slow moving rackets, fade in while counting in
